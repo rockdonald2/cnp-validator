@@ -6,12 +6,12 @@ class PayErrorImpl implements PayError {
     private final int m_code;
 
     /**
-     * Creeaza o instante de PayError, care a aparut in pregatirea tranzactilor pentru procesare.
+     * Létrehoz egy PayError példányt, amely a hiba információt fogja tartalmazni, ami a feldolgozás során felmerült.
      *
      * @param lineNumber
-     *                      numarul liniei in care a aparut eroarea
+     *                      sorszám, ahol előfordult a hiba
      * @param code
-     *              tipul eroarei
+     *              hiba típusa
      */
     public PayErrorImpl(int lineNumber, int code) {
         m_lineNumber = lineNumber;

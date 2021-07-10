@@ -21,10 +21,7 @@ class Tests {
     private static final PayMetricsProcessorImpl m_test_processor = new PayMetricsProcessorImpl();
 
     /*
-    * Acest fisier, parametrul `path` va contine tranzacti imaginare prin care diferite module pot fi testate.
-    * Formatul trebuie sa fi acelasi, ca formatul tranzactiilor reale intr-un fisier CSV.
-    *
-    * Testat cu datele:
+    * Tesztelve az alábbi adatokkal:
     *       1900420112713;318.9
     *       6190614235878;922.317
     *       6140622338914;487.1

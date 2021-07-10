@@ -3,40 +3,46 @@ package ro.axonsoft.internship21.pay;
 import java.math.BigDecimal;
 import java.util.Set;
 
-interface PayMetrics {
+public interface PayMetrics {
+
+    static PayMetrics getMetrics(int foreigners, int paymentsByMinors, int bigPayments,
+                                 int smallPayments, BigDecimal averagePaymentAmount,
+                                 BigDecimal totalAmountCapitalCity, Set<PayError> errors) {
+        return new PayMetricsImpl(foreigners, paymentsByMinors, bigPayments, smallPayments, averagePaymentAmount, totalAmountCapitalCity, errors);
+    }
 
     /**
-     * Numarul de cetateni straini care au efectuat plati.
+     * Külföldi személyek száma, akik intéztek fizetést.
      */
     Integer foreigners();
 
     /**
-     * Numarul de plati efectuate de catre minori.
+     * Kiskorúak által intézett fizetések száma.
      */
     Integer paymentsByMinors();
 
     /**
-     * Numarul de plati peste pragul de 5000RON.
+     * 5000 RON fölötti fizetések száma.
      */
     Integer bigPayments();
 
     /**
-     * Numarul de plati pana in 5000RON inclusiv.
+     * 5000 RON alatti fizetések, inkluzív.
      */
     Integer smallPayments();
 
     /**
-     * Media sumelor tuturor platilor. Valoarea are maxim doua zecimale.
+     * Kifizetések átlaga, két tizedes pontossággal.
      */
     BigDecimal averagePaymentAmount();
 
     /**
-     * Totalul platilor efectuate de cetatenii romani nascuti in Bucuresti.
+     * Bukaresti születésű román állampolgárok által intézett kifizetések összege.
      */
     BigDecimal totalAmountCapitalCity();
 
     /**
-     * Erorile de procesare.
+     * Feldolgozási hibák.
      */
     Set<PayError> errors();
 }

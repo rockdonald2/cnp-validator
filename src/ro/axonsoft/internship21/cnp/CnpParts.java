@@ -3,30 +3,29 @@ package ro.axonsoft.internship21.cnp;
 public interface CnpParts {
 
     /**
-     * Sexul determinat pe baza primei cifrei din CNP.
+     * CNP első számjegye alapján kikövetkeztett nem.
      */
     Sex sex();
 
     /**
-     * Posesorul CNP-ului este cetatean strain?
+     * Külföldi állampolgár-e.
      *
-     * @return {@code true} daca este cetatean strain, {@code false} in caz
-     *         contrar
+     * @return {@code true} ha külföldi, {@code false} ellenkező esetben
      */
     Boolean foreigner();
 
     /**
-     * Judetul.
+     * Születési megye.
      */
-    Judet judet();
+    County judet();
 
     /**
-     * Data nasterii.
+     * Születési dátum.
      */
     CalDate birthDate();
 
     /**
-     * Numarul de ordine.
+     * Sorszám.
      */
     Short orderNumber();
 

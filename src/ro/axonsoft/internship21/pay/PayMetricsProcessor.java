@@ -4,20 +4,23 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 
-interface PayMetricsProcessor {
+public interface PayMetricsProcessor {
 
     /**
-     * Proceseaza platile din {@code paymentsInputStream} si scrie metricele in
-     * {@code metricsOutputStream}
+     * Feldolgozza a {@code paymentsInputStream}-ban található tranzakciókat és kiírja a mutatókat a
+     * {@code metricsOutputStream}-ba
      *
      * @param paymentsInputStream
-     *             input stream al fisierului csv conținând plățile
+     *             csv állomány a tranzakciókkal
      * @param metricsOutputStream
-     *             output stream al fișierului in care se serializeaza
-     *             obiectul conținând metricile și erorile
+     *             állomány elérési útvonal, ahová szerializálja a mutatókat és a hozzátartozó hibákat
      * @throws IOException
-     *             daca apare o eroare de I/O.
+     *             ha valamilyen I/O hiba jelenne meg
      */
     void process(InputStream paymentsInputStream, OutputStream metricsOutputStream) throws IOException;
+
+    static PayMetricsProcessor getProcessor() {
+        return new PayMetricsProcessorImpl();
+    }
 
 }

@@ -7,10 +7,10 @@ public class CalDateImpl implements CalDate{
     private final byte m_day;
 
     /**
-     * Creaza o instanta de data parsabil.
+     * Létrehoz egy értelmezhető dátumpéldányt.
      *
      * @param date
-     *              data intr-un format "yyyy-MM-dd"
+     *              dátum "yyyy-MM-dd" formátumban
      */
     CalDateImpl(String date) {
         var dateElements = date.split("-");
@@ -35,9 +35,9 @@ public class CalDateImpl implements CalDate{
     }
 
     /**
-     * Vizualizeaza data intr-un format "yyyy-MM-dd".
+     * Vizualizálja a dátumot "yyyy-MM-dd" formátumban.
      *
-     * @return output-ul formatat
+     * @return formatált kimenet
      */
     @Override
     public String toString() {

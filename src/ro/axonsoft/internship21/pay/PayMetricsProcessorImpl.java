@@ -16,9 +16,8 @@ import org.apache.commons.lang3.tuple.Pair;
 import ro.axonsoft.internship21.cnp.CnpException;
 import ro.axonsoft.internship21.cnp.CnpParts;
 import ro.axonsoft.internship21.cnp.CnpValidatorImpl;
-import ro.axonsoft.internship21.cnp.Judet;
 
-public class PayMetricsProcessorImpl implements PayMetricsProcessor {
+class PayMetricsProcessorImpl implements PayMetricsProcessor {
 
 	private final Set<PayError> m_errors = new HashSet<>();
 
@@ -42,10 +41,10 @@ public class PayMetricsProcessorImpl implements PayMetricsProcessor {
 
 			var foreigners = getForeigners(listOfCustomers);
 
-			metrics = new PayMetricsImpl(foreigners, paymentsByMinors, bigPayments,
+			metrics = PayMetrics.getMetrics(foreigners, paymentsByMinors, bigPayments,
 							smallPayments, averagePaymentAmount, totalAmountCapitalCity, m_errors);
 		} else {
-			metrics = new PayMetricsImpl(0, 0, 0, 0, BigDecimal.ZERO, BigDecimal.ZERO, m_errors);
+			metrics = PayMetrics.getMetrics(0, 0, 0, 0, BigDecimal.ZERO, BigDecimal.ZERO, m_errors);
 		}
 
 		getObjectMapper().writeValue(metricsOutputStream, metrics);
@@ -69,12 +68,12 @@ public class PayMetricsProcessorImpl implements PayMetricsProcessor {
 	}
 
 	/**
-	 * Returneaza numarul de plati efectuate de persoane ce nu au implinit varsta majoratului.
+	 * Visszatéríti azon fizetések számát, amelyet 18 év alattiak intéztek.
 	 *
 	 * @param listOfCustomers
-	 *                          lista de plati
+	 *                          tranzakciók
 	 * @return
-	 *          numarul de plati
+	 *          fizetések száma
 	 */
 	int getPaymentsByMinors(final ArrayList<Pair<CnpParts, BigDecimal>> listOfCustomers) {
 		int counter = 0;
@@ -90,12 +89,12 @@ public class PayMetricsProcessorImpl implements PayMetricsProcessor {
 	}
 
 	/**
-	 * Returneaza suma totala a platilor efectuate de cetateni romani nascuti in Bucuresti.
+	 * Visszatéríti a bukaresti születésű román állampolgárok által intézett fizetések összegét.
 	 *
 	 * @param listOfCustomers
-	 *                          lista de plati
+	 *                          tranzakciók
 	 * @return
-	 *          suma totala
+	 *          összeg
 	 */
 	BigDecimal getTotalAmountCapitalCity(final ArrayList<Pair<CnpParts, BigDecimal>> listOfCustomers) {
 		var sum = BigDecimal.ZERO;
@@ -110,12 +109,12 @@ public class PayMetricsProcessorImpl implements PayMetricsProcessor {
 	}
 
 	/**
-	 * Returneaza numarul de cetateni straini ce au efectuat plati.
+	 * Külföldi személyek száma, akik fizetést intéztek.
 	 *
 	 * @param listOfCustomers
-	 *                          lista de plati
+	 *                          tranzakciók
 	 * @return
-	 *          numarul de cetateni straini
+	 *          külföldi személyek száma
 	 */
 	Integer getForeigners(final ArrayList<Pair<CnpParts, BigDecimal>> listOfCustomers) {
 		int counter = 0;
@@ -130,14 +129,14 @@ public class PayMetricsProcessorImpl implements PayMetricsProcessor {
 	}
 
 	/**
-	 * Returneaza numarul de plati cu valoare pana in LIMIT.
+	 * Visszatéríti a LIMIT-ig érvényes fizetések számát.
 	 *
 	 * @param listOfCustomers
-	 *                          lista de plati
+	 *                          tranzakciók
 	 * @param limit
-	 *              limita
+	 *              határérték
 	 * @return
-	 *          numarul de plati
+	 *          fizetések száma
 	 */
 	Integer getPaymentsNumberByLimit(final ArrayList<Pair<CnpParts, BigDecimal>> listOfCustomers, final String limit) {
 		int counter = 0;
@@ -161,12 +160,12 @@ public class PayMetricsProcessorImpl implements PayMetricsProcessor {
 	}
 
 	/**
-	 * Returneaza media valorilor plati.
+	 * Visszatéríti a fizetések átlagát.
 	 *
 	 * @param listOfCustomers
-	 *                          lista de plati
+	 *                          tranzakciók
 	 * @return
-	 *          media valorilor plati
+	 *          fizetések átlaga
 	 */
 	BigDecimal getAverage(final ArrayList<Pair<CnpParts, BigDecimal>> listOfCustomers) {
 		var sum = BigDecimal.ZERO;
@@ -179,14 +178,14 @@ public class PayMetricsProcessorImpl implements PayMetricsProcessor {
 	}
 
 	/**
-	 * Incarca lista platilor dintr-un fisier CSV care foloseasca ca separator de campuri caracterul ';'.
+	 * Beolvassa a tranzakciók listáját egy CSV állományból, amely mezőelválasztoként a ';'-t használja.
 	 *
 	 * @param paymentsInputStream
-	 *                              fisierul CSV ca o instanta de InputStream
+	 *                              CSV állomány
 	 * @return
-	 *          randurile fisierului iterabila ca String Array
+	 *          állomány sorai
 	 * @throws IOException
-	 *                      daca fisierul nu este gasit sau daca apare o eroare in incarcare
+	 *                      ha az állomány nem található, vagy beolvasási hiba lépett fel
 	 */
 	List<String[]> loadData(final InputStream paymentsInputStream) throws IOException {
 		var csvParser = new CSVParserBuilder()
@@ -206,12 +205,12 @@ public class PayMetricsProcessorImpl implements PayMetricsProcessor {
 	}
 
 	/**
-	 * Valideaza CNP-urile asociat cu plati si returneaza lista platilor.
+	 * Ellenőrzi a fizetésekhez tartozó CNP-ket, és visszatéríti a fizetéseket.
 	 *
 	 * @param dataInput
-	 *                  randurile fisierului CSV iterabila ca String Array
+	 *                  CSV állomány sorai
 	 * @return
-	 *          lista platilor
+	 *          tranzakciók
 	 */
 	ArrayList<Pair<CnpParts, BigDecimal>> getCustomers(final List<String[]> dataInput) {
 		var validator = new CnpValidatorImpl();
@@ -260,12 +259,12 @@ public class PayMetricsProcessorImpl implements PayMetricsProcessor {
 	}
 
 	/**
-	 * Scrie o eroare in set-ul de erori, impreuna cu tipul de eroare si randul in care a aparut acestea.
+	 * Kiír egy hibapéldányt a hibatömbbe, együtt annak típusával és sorszámával, ahol a hiba előfordult.
 	 *
 	 * @param lineNumber
-	 *                      randul
+	 *                      sor
 	 * @param errorType
-	 *                      tipul de eroare
+	 *                      hibatípus
 	 */
 	private void writeError(final int lineNumber, final int errorType) {
 		m_errors.add(new PayErrorImpl(lineNumber, errorType));

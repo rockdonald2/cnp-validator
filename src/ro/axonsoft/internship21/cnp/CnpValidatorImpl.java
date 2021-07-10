@@ -62,12 +62,12 @@ public class CnpValidatorImpl implements CnpValidator {
     }
 
     /**
-     * Valideaza daca CNP-ul contine doar numere.
+     * Ellenőrzi, hogy a CNP csak számokból áll-e.
      *
      * @param cnp
-     *              CNP-ul de validat
+     *              ellenőrízendő CNP
      * @throws CnpException
-     *                      daca CNP-ul nu este valid
+     *                      ha a CNP érvénytelen
      */
     void validateFormat(final String cnp) throws CnpException {
         if (!StringUtils.isNumeric(cnp)) {
@@ -76,12 +76,12 @@ public class CnpValidatorImpl implements CnpValidator {
     }
 
     /**
-     * Valideaza daca CNP-ul contine 13 numere.
+     * Ellenőrzi, hogy a CNP 13 számjegyből áll-e.
      *
      * @param cnp
-     *              CNP-ul de validat
+     *              ellenőrízendő CNP
      * @throws CnpException
-     *                      daca CNP-ul nu este valid
+     *                      ha a CNP érvénytelen
      */
     void validateLength(final String cnp) throws CnpException {
         if (cnp.length() != CNP_LENGTH) {
@@ -90,12 +90,12 @@ public class CnpValidatorImpl implements CnpValidator {
     }
 
     /**
-     * Transformeaza CNP-ul dintr-un String intr-un Array.
+     * A CNP-t String-ből tömbbé alakítja.
      *
      * @param cnpString
-     *                  CNP-ul de transformat
+     *                  átalakítandó CNP
      * @return
-     *          CNP-ul intr-un Array
+     *          CNP tömbként
      */
     private byte[] createByteCnpFromString(final String cnpString) throws CnpException {
         final var cnpDigits = new byte[cnpString.length()];
@@ -112,14 +112,14 @@ public class CnpValidatorImpl implements CnpValidator {
     }
 
     /**
-     * Valideaza si returneaza sex-ul persoanei.
+     * Ellenőrzi és visszatéríti a személy nemét.
      *
      * @param sexCodeString
-     *                      componentul S care reprezinta sexul persoanei intr-un String
+     *                      a CNP alkotóeleme, amely a nem kikövetkeztetésére szolgál
      * @return
-     *          Sex-ul persoanei
+     *          nem
      * @throws CnpException
-     *                      daca CNP-ul nu este valid
+     *                      ha a CNP érvénytelen
      */
     Sex getSex(final String sexCodeString) throws CnpException {
         try {
@@ -130,14 +130,14 @@ public class CnpValidatorImpl implements CnpValidator {
     }
 
     /**
-     * Valideaza si returneaza daca persoana este una rezidenta.
+     * Ellenőrzi és visszatéríti, hogy rezidens a személy.
      *
      * @param sexCodeString
-     *                      componentul S care reprezinta sexul persoanei intr-un String prin care parametrul poate fi dedusa
+     *                      CNP alkotóeleme, amely a státuszának megállapítására szolgál
      * @return
-     *          boolean
+     *          logikai érték, külföldi-e
      * @throws CnpException
-     *                      daca CNP-ul nu este valid
+     *                      ha a CNP érvénytelen
      */
     boolean getForeignStatus(final String sexCodeString) throws CnpException {
         try {
@@ -152,16 +152,16 @@ public class CnpValidatorImpl implements CnpValidator {
     }
 
     /**
-     * Valideaza, returneaza si compune data nasterii persoanei.
+     * Ellenőrzi és visszatéríti a személy születési dátumát.
      *
      * @param dateString
-     *                  componentul AA, LL, ZZ formate din anul, luna, si ziua nasterii intr-un String
+     *                  CNP alkotóeleme, amely a dátum kikövetkeztetésére szolgál
      * @param centuryCode
-     *                  componentul S care reprezinta secolul in care s-a nascut persoana
+     *                  a CNP alkotóeleme, amely az évszázad kikövetkeztetésére szolgál
      * @return
-     *          data nasterii persoanei intr-un CalDate instanta
+     *          születési dátum CalDate példányként
      * @throws CnpException
-     *                      daca CNP-ul nu este valid
+     *                      ha a CNP érvénytelen
      */
     CalDate getBirthDate(final String dateString, String centuryCode) throws CnpException {
         final var dateCharArr = dateString.toCharArray();
@@ -193,26 +193,26 @@ public class CnpValidatorImpl implements CnpValidator {
     }
 
     /**
-     * Ghiceste secolul in care s-a nascut persoana rezidenta.
+     * Kikövetkezteti az évszázadot, amelyben született a nem rezidens személy.
      *
      * @param dateYearString
-     *                      componentul AA care reprezinta anul nasterii intr-un String
+     *                      CNP alkotóeleme, amely a születési év kikövetkeztetésére szolgál
      * @return
-     *          secolul in care s-a nascut persoana intr-un String
+     *          évszázad
      */
     private String guessForeignerCentury(final String dateYearString) {
         return Byte.parseByte(dateYearString) <= 21 ? "20" : "19";
     }
 
     /**
-     * Returneaza si valideaza secolul in care s-a nascut persoana.
+     * Ellenőrzi és visszatéríti az évszázadot, amelyben a személy született.
      *
      * @param sexCodeString
-     *                      componentul S care reprezinta secolul in care s-a nascut persoana
+     *                      a CNP alkotóeleme, amely a születési év kikövetkeztetésére szolgál
      * @return
-     *          secolul in care s-a nascut persoana intr-un String
+     *          évszázad
      * @throws CnpException
-     *                      daca CNP-ul nu este valid
+     *                      ha a CNP érvénytelen
      */
     String getCentury(final String sexCodeString) throws CnpException {
         try {
@@ -229,32 +229,32 @@ public class CnpValidatorImpl implements CnpValidator {
     }
 
     /**
-     * Returneaza si valideaza judetul nasterii persoanei.
+     * Ellenőrzi és visszatéríti a születési megyét.
      *
      * @param countyString
-     *                      componentul JJ care reprezinta judetul sau sectorul in care s-a nascut persoana intr-un String
+     *                      CNP alkotóeleme, amely a megye kikövetkeztetésére szolgál
      * @return
-     *          Judet
+     *          County
      * @throws CnpException
-     *                      daca CNP-ul nu este valid
+     *                      ha a CNP érvénytelen
      */
-    Judet getBirthCounty(final String countyString) throws CnpException {
+    County getBirthCounty(final String countyString) throws CnpException {
         try {
-            return Judet.getByCode(countyString);
+            return County.getByCode(countyString);
         } catch (CnpException e) {
             throw new CnpException(e);
         }
     }
 
     /**
-     * Returneaza numarul de ordine a persoanei.
+     * Visszatéríti a személy sorszámát.
      *
      * @param orderNumberString
-     *                          componentul NNN care reprezinta un numar secvential intr-un String
+     *                          CNP alkotóeleme, amely a sorszám kikövetkeztetésére szolgál
      * @return
-     *          numarul de ordine
+     *          sorszám
      * @throws CnpException
-     *                      daca CNP-ul nu este valid
+     *                      ha a CNP érvénytelen
      */
     Short getOrderNumber(final String orderNumberString) throws CnpException {
         try {
@@ -265,12 +265,12 @@ public class CnpValidatorImpl implements CnpValidator {
     }
 
     /**
-     * Valideaza numarul de control CNP-ului.
+     * Ellenőrzi a CNP kontrollszámát.
      *
      * @param cnpString
-     *                  CNP-ul de validat intr-un String
+     *                  CNP
      * @throws CnpException
-     *                      daca CNP-ul nu este valid
+     *                      ha a CNP érvénytelen
      */
     void validateControlNumber(final String cnpString) throws CnpException {
         final var cnpDigitArr = createByteCnpFromString(cnpString);

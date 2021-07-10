@@ -3,16 +3,16 @@ package ro.axonsoft.internship21.pay;
 interface PayError {
 
     /**
-     * Numarul liniei la care s-a obtinut eroarea.
+     * Sorszám, ahol a hiba előfordult.
      */
     Integer line();
 
     /**
-     * Tipul erorii:
+     * Hibák típusa:
      * <ul>
-     * <li>0 linie invalida</li>
-     * <li>1 pentru CNP invalid</li>
-     * <li>2 pentru suma plata invalida</li>
+     * <li>0 érvénytelen sor</li>
+     * <li>1 CNP érvénytelen</li>
+     * <li>2 fizetett összeg érvénytelen</li>
      * </ul>
      */
     Integer type();

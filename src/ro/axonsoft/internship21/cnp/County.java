@@ -3,7 +3,7 @@ package ro.axonsoft.internship21.cnp;
 import java.util.HashMap;
 import java.util.Map;
 
-public enum Judet {
+public enum County {
 
     AB("AB", 1),
     AR("AR", 2),
@@ -54,13 +54,13 @@ public enum Judet {
     CL("CL", 51),
     GR("GR", 52);
 
-    private static final Map<Byte, Judet> m_map = new HashMap<>();
+    private static final Map<Byte, County> m_map = new HashMap<>();
 
     /*
      * Creeaza un Map prin care cautarea judetului prin cod devine mult mai repede.
      */
     static {
-        for (final var j : Judet.values()) {
+        for (final var j : County.values()) {
             m_map.put(j.getCode(), j);
         }
     }
@@ -68,7 +68,7 @@ public enum Judet {
     private final String m_abrv;
     private final byte m_code;
 
-    Judet(String abrv, int code) {
+    County(String abrv, int code) {
         m_abrv = abrv;
         m_code = (byte) code;
     }
@@ -88,7 +88,7 @@ public enum Judet {
      * @return judetul nasterii
      * @throws CnpException daca CNP-ul nu este valid
      */
-    public static Judet getByCode(final String code) throws CnpException {
+    public static County getByCode(final String code) throws CnpException {
         try {
             if (!m_map.containsKey(Byte.parseByte(code))) {
                 throw new CnpException("Invalid county code", CnpException.ErrorCode.INVALID_CNP);

@@ -19,22 +19,23 @@ class PayMetricsImpl implements PayMetrics {
     private final Set<PayError> m_errors;
 
     /**
-     * Creeaza o instanta de PayMetrics, care poate fi serializata intr-un fisier JSON.
+     * Létrehoz egy PayMetricsImpl példányt, amely JSON állományként szerializálható
      *
      * @param foreigners
-     *                  numarul de cetateni straini ce au efectuat plati
+     *                  külföldi személyek száma, akik kifizetést intéztek
+     *                  ! javítsd ki, hogy ne ismétlődjön
      * @param paymentsByMinors
-     *                          numarul de plati efectuate de persoane ce nu au implinit varsta majoratului
+     *                          azon fizetések száma, amelyet 18.-ik életévüket be nem töltött személyek intézték
      * @param bigPayments
-     *                      numarul de plati cu valoare mai mare de 5000 RON
+     *                      5000 RON-t meghaladó fizetések száma
      * @param smallPayments
-     *                      numarul de plati cu valoare pana in 5000 RON
+     *                      5000 RON-t meg nem haladó fizetések száma, inkluzív
      * @param averagePaymentAmount
-     *                              media valorilor plati
+     *                              fizetések átlaga
      * @param totalAmountCapitalCity
-     *                              suma totala a platilor efectuate de cetateni romani nascuti in Bucuresti
+     *                              bukaresti születésű román állampolgárok által intézett fizetések összege.
      * @param errors
-     *              lista de erori
+     *              hibatömb
      */
     PayMetricsImpl(int foreigners, int paymentsByMinors, int bigPayments,
                    int smallPayments, BigDecimal averagePaymentAmount,

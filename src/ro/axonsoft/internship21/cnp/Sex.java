@@ -7,14 +7,14 @@ public enum Sex {
     U;
 
     /**
-     * Valideaza si returneaza sex-ul persoanei dedus din CNP.
+     * Ellenőrzi és visszatéríti a személy nemét
      *
      * @param code
-     *            codul de validat
+     *            ellenőrizendő CNP alkotóelem
      * @return
-     *         sex-ul persoanei
+     *         nem
      * @throws CnpException
-     *                      daca CNP-ul nu este valid
+     *                      ha a CNP érvénytelen
      */
     public static Sex getByCode(final String code) throws CnpException {
         try {

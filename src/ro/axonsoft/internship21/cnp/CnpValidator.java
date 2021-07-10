@@ -3,14 +3,13 @@ package ro.axonsoft.internship21.cnp;
 public interface CnpValidator {
 
     /**
-     * Valideza CNP-ul primit ca parametru si returneaza partile componente ale
-     * acestuia.
+     * Validálja a paraméterként kapott CNP-t, és visszatéríti értelmezhető formátumban.
      *
      * @param cnp
-     *            CNP-ul de validat
-     * @return partile componente ale CNP-ului
+     *            ellenőrízendő CNP
+     * @return CNP alkotóelemei értelmezhető objektumként
      * @throws CnpException
-     *             daca CNP-ul nu este valid
+     *             ha a CNP nem érvényes
      */
     CnpParts validateCnp(String cnp) throws CnpException;
 

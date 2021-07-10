@@ -4,25 +4,25 @@ public class CnpPartsImpl implements CnpParts {
 
     private final Sex m_sex;
     private final Boolean m_isForeigner;
-    private final Judet m_county;
+    private final County m_county;
     private final CalDate m_birthDate;
     private final Short m_orderNumber;
 
     /**
-     * Creeaza o instanta de CnpParts, care poate fi utilizata in procesarea tranzactilor.
+     * Értelmezhető CNP példány, amelynek adatai lekérdezhetőek.
      *
      * @param sex
-     *              tine sex-ul persoanei
+     *              nem
      * @param foreigner
-     *              tine daca persoana este una rezidenta
+     *              külföldi-e
      * @param birthDate
-     *              tine data nasterii persoanei
+     *              születési dátum
      * @param county
-     *              tine judetul in care s-a nascut persoana
+     *              születési megye
      * @param orderNumber
-     *              tine numarul de ordine a persoanei prin care sunt diferentiata persoanele nascute in acelasi loc, si in acelasi timp
+     *              sorszám
      */
-    CnpPartsImpl(Sex sex, Boolean foreigner, CalDate birthDate, Judet county, Short orderNumber) {
+    CnpPartsImpl(Sex sex, Boolean foreigner, CalDate birthDate, County county, Short orderNumber) {
         m_sex = sex;
         m_isForeigner = foreigner;
         m_county = county;
@@ -41,7 +41,7 @@ public class CnpPartsImpl implements CnpParts {
     }
 
     @Override
-    public Judet judet() {
+    public County judet() {
         return m_county;
     }
 
@@ -56,9 +56,9 @@ public class CnpPartsImpl implements CnpParts {
     }
 
     /**
-     * Vizualizeaza datele persoanei dedus din CNP.
+     * Vizualizálja a személy CNP-ből kikövetkeztett adatait.
      *
-     * @return output-ul formatat
+     * @return formatált kimenet
      */
     @Override
     public String toString() {

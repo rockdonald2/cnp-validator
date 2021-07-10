@@ -4,7 +4,7 @@ public class CnpException extends Exception {
 
     private final ErrorCode m_code;
 
-    public enum ErrorCode {
+    enum ErrorCode {
 
         INVALID_CNP("INVALID_CNP", 1);
 
@@ -27,12 +27,12 @@ public class CnpException extends Exception {
     }
 
     /**
-     * Constructorul pentru exceptiile generate de erori in cursul validarea CNP-urilor.
+     * CNP feldolgozása során keletkezett kivétel.
      *
      * @param errorMsg
-     *              mesajul de eroare scris pe console, intotdeauna incepe cu prefix-ul "Error:"
+     *              a kivételhez tartozó hibaüzenet, ami minden esetben "Error:" előtaggal kezdődik
      * @param code
-     *              codul de eroare asociat
+     *              hozzátartozó hibakód
      */
     public CnpException(String errorMsg, ErrorCode code) {
         super("Error: " + errorMsg);
@@ -40,10 +40,10 @@ public class CnpException extends Exception {
     }
 
     /**
-     * Constructorul de copiere pentru exceptiile aruncate din nou.
+     * Copy-konstruktőr.
      *
      * @param e
-     *          exceptia generata
+     *          lemásolandó kivétel
      */
     public CnpException(CnpException e) {
         super(e.getMessage());
@@ -51,7 +51,7 @@ public class CnpException extends Exception {
     }
 
     /**
-     * Returneaza codul de eroare asociata.
+     * Visszatéríti a kivételhez tartozó hibakód példányt.
      *
      * @return ErrorCode
      */
@@ -60,12 +60,19 @@ public class CnpException extends Exception {
     }
 
     /**
-     * Returneaza tipul codului de eroare asociata.
+     * Visszatéríti a kivételhez tartozó hibakódot.
      *
-     * @return numarul tipului
+     * @return hibakód típus
      */
     public int getCodeType() {
         return m_code.getErrorTypeNumber();
     }
+
+    /**
+     * Visszatéríti a kivételhez tartozó hibakód megnevezését.
+     *
+     * @return hibakód megnevezése
+     */
+    public String getCodeName() { return m_code.getErrorName(); }
 
 }

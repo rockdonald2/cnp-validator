@@ -28,12 +28,12 @@ class PayException extends Exception {
     }
 
     /**
-     * Constructorul pentru exceptiile generate de erori in cursul procesarea tranzactilor.
+     * Feldolgozáskor felmerült kivételek.
      *
      * @param errorMsg
-     *              mesajul de eroare scris pe console, intotdeauna incepe cu prefix-ul "Error:"
+     *              a kivételhez tartozó hibaüzenet, minden esetben az "Error:" előtaggal kezdődik
      * @param code
-     *              codul de eroare asociat
+     *              hozzátartozó hibakód
      */
     public PayException(String errorMsg, ErrorCode code) {
         super("Error: " + errorMsg);
@@ -41,10 +41,10 @@ class PayException extends Exception {
     }
 
     /**
-     * Constructorul de copiere pentru exceptiile aruncate din nou.
+     * Copy-konstruktőr
      *
      * @param e
-     *          exceptia generata
+     *          lemásolandó kivétel
      */
     public PayException(PayException e) {
         super(e.getMessage());
@@ -52,7 +52,7 @@ class PayException extends Exception {
     }
 
     /**
-     * Returneaza codul de eroare asociata.
+     * Visszatéríti a kivételhez tartozó hibakód példányt.
      *
      * @return ErrorCode
      */
@@ -61,13 +61,20 @@ class PayException extends Exception {
     }
 
     /**
-     * Returneaza tipul codului de eroare asociata.
+     * Visszatéríti a kivételhez tartozó hibakódot.
      *
-     * @return numarul tipului
+     * @return hibakód típusszáma
      */
     public int getCodeType() {
         return m_code.getErrorTypeNumber();
     }
+
+    /**
+     * Visszatéríti a kivételhez tartozó hibakód megnevezését.
+     *
+     * @return hibakód megnevezése
+     */
+    public String getCodeName() { return m_code.getErrorName(); }
 
 }
 
