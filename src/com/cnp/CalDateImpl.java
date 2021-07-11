@@ -1,6 +1,6 @@
 package com.cnp;
 
-public class CalDateImpl implements CalDate{
+class CalDateImpl implements CalDate{
 
     private final short m_year;
     private final byte m_month;

@@ -6,10 +6,7 @@ import com.cnp.exception.*;
 import org.apache.commons.validator.GenericValidator;
 import org.apache.commons.lang3.StringUtils;
 
-public class CnpValidatorImpl implements CnpValidator {
-
-    private static final int CNP_LENGTH = 13;
-    private static final byte[] CONTROL_DIGIT_ARRAY = new byte[]{2, 7, 9, 1, 4, 6, 3, 5, 8, 2, 7, 9};
+class CnpValidatorImpl implements CnpValidator {
 
     private enum CnpPart {
 
@@ -49,15 +46,15 @@ public class CnpValidatorImpl implements CnpValidator {
 
         validateControlNumber(cnp);
 
-        var sex = getSex(CnpPart.SEX_AND_CENTURY_CODE.extractFrom(cnp));
+        var sex = getSex(cnp);
 
-        var foreigner = getForeignStatus(CnpPart.SEX_AND_CENTURY_CODE.extractFrom(cnp));
+        var foreigner = getForeignStatus(cnp);
 
-        var birthDate = getBirthDate(CnpPart.BIRTH_DATE.extractFrom(cnp), CnpPart.SEX_AND_CENTURY_CODE.extractFrom(cnp));
+        var birthDate = getBirthDate(cnp);
 
-        var birthCounty = getBirthCounty(CnpPart.BIRTH_COUNTY_CODE.extractFrom(cnp));
+        var birthCounty = getBirthCounty(cnp);
 
-        var orderNumber = getOrderNumber(CnpPart.ORDER_NUMBER.extractFrom(cnp));
+        var orderNumber = getOrderNumber(cnp);
 
         return new CnpPartsImpl(sex, foreigner, birthDate, birthCounty, orderNumber);
     }
@@ -85,46 +82,24 @@ public class CnpValidatorImpl implements CnpValidator {
      *                      ha a CNP érvénytelen
      */
     void validateLength(final String cnp) throws CnpException {
-        if (cnp.length() != CNP_LENGTH) {
+        if (cnp.length() != CnpUtils.CNP_LENGTH) {
             throw new CnpFormatException("Missing digits from CNP");
         }
     }
 
     /**
-     * A CNP-t String-ből tömbbé alakítja.
-     *
-     * @param cnpString
-     *                  átalakítandó CNP
-     * @return
-     *          CNP tömbként
-     */
-    private byte[] createByteCnpFromString(final String cnpString) throws CnpException {
-        final var cnpDigits = new byte[cnpString.length()];
-
-        for (int i = 0; i < cnpString.length(); i++) {
-            try {
-                cnpDigits[i] = Byte.parseByte(cnpString.substring(i, i + 1));
-            } catch (Exception e) {
-                throw new CnpFormatException("Invalid digit");
-            }
-        }
-
-        return cnpDigits;
-    }
-
-    /**
      * Ellenőrzi és visszatéríti a személy nemét.
      *
-     * @param sexCodeString
-     *                      a CNP alkotóeleme, amely a nem kikövetkeztetésére szolgál
+     * @param cnp
+     *                      cnp
      * @return
      *          nem
      * @throws CnpException
      *                      ha a CNP érvénytelen
      */
-    Sex getSex(final String sexCodeString) throws CnpException {
+    Sex getSex(final String cnp) throws CnpException {
         try {
-            return Sex.getByCode(sexCodeString);
+            return Sex.getByCode(CnpPart.SEX_AND_CENTURY_CODE.extractFrom(cnp));
         } catch (CnpException e) {
             throw e;
         }
@@ -133,16 +108,16 @@ public class CnpValidatorImpl implements CnpValidator {
     /**
      * Ellenőrzi és visszatéríti, hogy rezidens a személy.
      *
-     * @param sexCodeString
-     *                      CNP alkotóeleme, amely a státuszának megállapítására szolgál
+     * @param cnp
+     *                      cnp
      * @return
      *          logikai érték, külföldi-e
      * @throws CnpException
      *                      ha a CNP érvénytelen
      */
-    boolean getForeignStatus(final String sexCodeString) throws CnpException {
+    boolean getForeignStatus(final String cnp) throws CnpException {
         try {
-            return switch (Byte.parseByte(sexCodeString)) {
+            return switch (Byte.parseByte(CnpPart.SEX_AND_CENTURY_CODE.extractFrom(cnp))) {
                 case 7, 8, 9 -> true;
                 case 1, 2, 3, 4, 5, 6 -> false;
                 default -> throw new InvalidSexException("Invalid sex code");
@@ -155,36 +130,22 @@ public class CnpValidatorImpl implements CnpValidator {
     /**
      * Ellenőrzi és visszatéríti a személy születési dátumát.
      *
-     * @param dateString
-     *                  CNP alkotóeleme, amely a dátum kikövetkeztetésére szolgál
-     * @param centuryCode
-     *                  a CNP alkotóeleme, amely az évszázad kikövetkeztetésére szolgál
+     * @param cnp
+     *                  cnp
      * @return
      *          születési dátum CalDate példányként
      * @throws CnpException
      *                      ha a CNP érvénytelen
      */
-    CalDate getBirthDate(final String dateString, String centuryCode) throws CnpException {
-        final var dateCharArr = dateString.toCharArray();
-        final var composedDate = new StringBuilder();
+    CalDate getBirthDate(final String cnp) throws CnpException {
+        final String dateString = CnpPart.BIRTH_DATE.extractFrom(cnp);
 
-        var centuryString = getCentury(centuryCode);
-
+        var centuryString = getCentury(cnp);
         if (centuryString.isEmpty()) {
-            centuryString = guessForeignerCentury(dateString.substring(0, 2));
+            centuryString = CnpUtils.guessForeignerCentury(dateString.substring(0, 2));
         }
 
-        composedDate.append(centuryString);
-
-        for (int i = 0; i < dateCharArr.length; ++i) {
-            composedDate.append(dateCharArr[i]);
-
-            if (i == 1 || i == 3) {
-                composedDate.append('-');
-            }
-        }
-
-        final var returnDate = composedDate.toString();
+        final var returnDate = CnpUtils.composeDate(dateString.toCharArray(), centuryString);
 
         if (!GenericValidator.isDate(returnDate, "yyyy-MM-dd", true)) {
             throw new InvalidBirthDateException("Invalid birth date");
@@ -194,30 +155,18 @@ public class CnpValidatorImpl implements CnpValidator {
     }
 
     /**
-     * Kikövetkezteti az évszázadot, amelyben született a nem rezidens személy.
-     *
-     * @param dateYearString
-     *                      CNP alkotóeleme, amely a születési év kikövetkeztetésére szolgál
-     * @return
-     *          évszázad
-     */
-    private String guessForeignerCentury(final String dateYearString) {
-        return Byte.parseByte(dateYearString) <= 21 ? "20" : "19";
-    }
-
-    /**
      * Ellenőrzi és visszatéríti az évszázadot, amelyben a személy született.
      *
-     * @param sexCodeString
+     * @param cnp
      *                      a CNP alkotóeleme, amely a születési év kikövetkeztetésére szolgál
      * @return
      *          évszázad
      * @throws CnpException
      *                      ha a CNP érvénytelen
      */
-    String getCentury(final String sexCodeString) throws CnpException {
+    String getCentury(final String cnp) throws CnpException {
         try {
-            return switch (Byte.parseByte(sexCodeString)) {
+            return switch (Byte.parseByte(CnpPart.SEX_AND_CENTURY_CODE.extractFrom(cnp))) {
                 case 1, 2 -> "19";
                 case 3, 4 -> "18";
                 case 5, 6 -> "20";
@@ -232,16 +181,16 @@ public class CnpValidatorImpl implements CnpValidator {
     /**
      * Ellenőrzi és visszatéríti a születési megyét.
      *
-     * @param countyString
-     *                      CNP alkotóeleme, amely a megye kikövetkeztetésére szolgál
+     * @param cnp
+     *                      cnp
      * @return
      *          County
      * @throws CnpException
      *                      ha a CNP érvénytelen
      */
-    County getBirthCounty(final String countyString) throws CnpException {
+    County getBirthCounty(final String cnp) throws CnpException {
         try {
-            return County.getByCode(countyString);
+            return County.getByCode(CnpPart.BIRTH_COUNTY_CODE.extractFrom(cnp));
         } catch (CnpException e) {
             throw e;
         }
@@ -250,16 +199,16 @@ public class CnpValidatorImpl implements CnpValidator {
     /**
      * Visszatéríti a személy sorszámát.
      *
-     * @param orderNumberString
+     * @param cnp
      *                          CNP alkotóeleme, amely a sorszám kikövetkeztetésére szolgál
      * @return
      *          sorszám
      * @throws CnpException
      *                      ha a CNP érvénytelen
      */
-    Short getOrderNumber(final String orderNumberString) throws CnpException {
+    Short getOrderNumber(final String cnp) throws CnpException {
         try {
-            return Short.parseShort(orderNumberString);
+            return Short.parseShort(CnpPart.ORDER_NUMBER.extractFrom(cnp));
         } catch (Exception e) {
             throw new InvalidOrderNumberException("Invalid order number");
         }
@@ -268,19 +217,14 @@ public class CnpValidatorImpl implements CnpValidator {
     /**
      * Ellenőrzi a CNP kontrollszámát.
      *
-     * @param cnpString
+     * @param cnp
      *                  CNP
      * @throws CnpException
      *                      ha a CNP érvénytelen
      */
-    void validateControlNumber(final String cnpString) throws CnpException {
-        final var cnpDigitArr = createByteCnpFromString(cnpString);
-
-        int digitSum = 0;
-        for (int i = 0; i < cnpDigitArr.length - 1; i++) {
-            digitSum += CONTROL_DIGIT_ARRAY[i] * cnpDigitArr[i];
-        }
-
+    void validateControlNumber(final String cnp) throws CnpException {
+        final var cnpDigitArr = CnpUtils.createByteCnpFromString(cnp);
+        int digitSum = CnpUtils.calculateWeightedSum(cnpDigitArr);
         byte controlNumber = cnpDigitArr[cnpDigitArr.length - 1];
 
         if (((digitSum % 11 == 10) && controlNumber != 1)) {

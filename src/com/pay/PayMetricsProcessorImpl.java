@@ -5,6 +5,7 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.*;
 
+import com.cnp.CnpValidator;
 import com.fasterxml.jackson.core.Version;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.module.SimpleModule;
@@ -18,7 +19,7 @@ import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.apache.commons.lang3.tuple.Pair;
 import com.cnp.exception.CnpException;
 import com.cnp.CnpParts;
-import com.cnp.CnpValidatorImpl;
+
 
 class PayMetricsProcessorImpl implements PayMetricsProcessor {
 
@@ -216,7 +217,7 @@ class PayMetricsProcessorImpl implements PayMetricsProcessor {
 	 *          tranzakciók
 	 */
 	ArrayList<Pair<CnpParts, BigDecimal>> getCustomers(final List<String[]> dataInput) {
-		var validator = new CnpValidatorImpl();
+		var validator = CnpValidator.getValidator();
 		var listOfCustomers = new ArrayList<Pair<CnpParts, BigDecimal>>();
 
 		for (int i = 0; i < dataInput.size(); i++) {

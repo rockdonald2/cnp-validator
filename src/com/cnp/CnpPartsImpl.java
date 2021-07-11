@@ -1,6 +1,6 @@
 package com.cnp;
 
-public class CnpPartsImpl implements CnpParts {
+class CnpPartsImpl implements CnpParts {
 
     private final Sex m_sex;
     private final Boolean m_isForeigner;

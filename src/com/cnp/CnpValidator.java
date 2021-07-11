@@ -15,4 +15,8 @@ public interface CnpValidator {
      */
     CnpParts validateCnp(String cnp) throws CnpException;
 
+    static CnpValidator getValidator() {
+        return new CnpValidatorImpl();
+    }
+
 }
