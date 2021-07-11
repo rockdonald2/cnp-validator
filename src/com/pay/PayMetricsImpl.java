@@ -1,10 +1,8 @@
 package com.pay;
 
-import com.fasterxml.jackson.core.JsonGenerator;
-import com.fasterxml.jackson.databind.SerializerProvider;
-import com.fasterxml.jackson.databind.ser.std.StdSerializer;
+import org.json.*;
 
-import java.io.IOException;
+import java.io.*;
 import java.math.BigDecimal;
 import java.util.Set;
 
@@ -23,7 +21,6 @@ class PayMetricsImpl implements PayMetrics {
      *
      * @param foreigners
      *                  külföldi személyek száma, akik kifizetést intéztek
-     *                  ! javítsd ki, hogy ne ismétlődjön
      * @param paymentsByMinors
      *                          azon fizetések száma, amelyet 18.-ik életévüket be nem töltött személyek intézték
      * @param bigPayments
@@ -84,41 +81,30 @@ class PayMetricsImpl implements PayMetrics {
         return m_errors;
     }
 
-    public static class metricsSerializer extends StdSerializer<PayMetrics> {
+    public void writeToFile(FileOutputStream file) {
+        var metrics = new JSONObject();
 
-        public metricsSerializer() {
-            this(null);
+        metrics.put("averagePaymentAmount", this.averagePaymentAmount());
+        metrics.put("smallPayments", this.smallPayments());
+        metrics.put("bigPayments", this.bigPayments());
+        metrics.put("paymentsByMinor", this.paymentsByMinors());
+        metrics.put("totalAmountCapitalCity", this.totalAmountCapitalCity());
+        metrics.put("foreigners", this.foreigners());
+
+        var errs = new JSONArray();
+        for (var e : errors()) {
+            errs.put(e.getJsonObject());
         }
 
-        public metricsSerializer(Class<PayMetrics> m) {
-            super(m);
-        }
+        metrics.put("errors", errs);
 
-        @Override
-        public void serialize(
-                PayMetrics payMetrics, JsonGenerator jsonGenerator, SerializerProvider serializerProvider) {
-            try {
-                jsonGenerator.writeStartObject();
-
-                jsonGenerator.writeNumberField("averagePaymentAmount", payMetrics.averagePaymentAmount());
-                jsonGenerator.writeNumberField("smallPayments", payMetrics.smallPayments());
-                jsonGenerator.writeNumberField("bigPayments", payMetrics.bigPayments());
-                jsonGenerator.writeNumberField("paymentsByMinor", payMetrics.paymentsByMinors());
-                jsonGenerator.writeNumberField("totalAmountCapitalCity", payMetrics.totalAmountCapitalCity());
-                jsonGenerator.writeNumberField("foreigners", payMetrics.foreigners());
-
-                jsonGenerator.writeFieldName("errors");
-                jsonGenerator.writeStartArray();
-                for (var error : payMetrics.errors()) {
-                    jsonGenerator.writeStartObject();
-                    jsonGenerator.writeNumberField("line", error.line());
-                    jsonGenerator.writeNumberField("type", error.type());
-                    jsonGenerator.writeEndObject();
-                }
-                jsonGenerator.writeEndArray();
-
-                jsonGenerator.writeEndObject();
-            } catch (IOException ignored) { }
+        var o = new OutputStreamWriter(file);
+        try {
+           o.write(metrics.toString());
+           o.flush();
+           o.close();
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 

@@ -1,9 +1,12 @@
 package com.pay;
 
+import java.io.Externalizable;
+import java.io.FileOutputStream;
+import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Set;
 
-public interface PayMetrics {
+public interface PayMetrics extends Serializable {
 
     static PayMetrics getMetrics(int foreigners, int paymentsByMinors, int bigPayments,
                                  int smallPayments, BigDecimal averagePaymentAmount,
@@ -45,4 +48,7 @@ public interface PayMetrics {
      * Feldolgozási hibák.
      */
     Set<PayError> errors();
+
+    void writeToFile(FileOutputStream metricsOutputStream);
+
 }

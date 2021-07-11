@@ -6,9 +6,6 @@ import java.math.RoundingMode;
 import java.util.*;
 
 import com.cnp.CnpValidator;
-import com.fasterxml.jackson.core.Version;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.module.SimpleModule;
 import com.opencsv.CSVParserBuilder;
 import com.opencsv.CSVReaderBuilder;
 import com.opencsv.exceptions.CsvException;
@@ -24,7 +21,7 @@ class PayMetricsProcessorImpl implements PayMetricsProcessor {
 	private final Set<PayError> m_errors = new HashSet<>();
 
 	@Override
-	public void process(InputStream paymentsInputStream, OutputStream metricsOutputStream) throws IOException {
+	public void process(FileInputStream paymentsInputStream, FileOutputStream metricsOutputStream) throws IOException {
 		var dataInput = loadData(paymentsInputStream);
 
 		var mapOfCustomers = getCustomers(dataInput);
@@ -49,24 +46,7 @@ class PayMetricsProcessorImpl implements PayMetricsProcessor {
 			metrics = PayMetrics.getMetrics(0, 0, 0, 0, BigDecimal.ZERO, BigDecimal.ZERO, m_errors);
 		}
 
-		getObjectMapper().writeValue(metricsOutputStream, metrics);
-	}
-
-	/**
-	 * Returneaza ObjectMapper-ul prin care instanta PayMetrics poate fi serializata.
-	 *
-	 * @return
-	 *          ObjectMapper
-	 */
-	private ObjectMapper getObjectMapper() {
-		var objectMapper = new ObjectMapper();
-
-		SimpleModule module =
-						new SimpleModule("metricsSerializer", new Version(1, 0, 0, null, null, null));
-		module.addSerializer(PayMetrics.class, new PayMetricsImpl.metricsSerializer());
-		objectMapper.registerModule(module);
-
-		return objectMapper;
+		metrics.writeToFile(metricsOutputStream);
 	}
 
 	/**

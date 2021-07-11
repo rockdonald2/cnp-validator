@@ -1,8 +1,6 @@
 package com.pay;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
+import java.io.*;
 
 public interface PayMetricsProcessor {
 
@@ -17,7 +15,7 @@ public interface PayMetricsProcessor {
      * @throws IOException
      *             ha valamilyen I/O hiba jelenne meg
      */
-    void process(InputStream paymentsInputStream, OutputStream metricsOutputStream) throws IOException;
+    void process(FileInputStream paymentsInputStream, FileOutputStream metricsOutputStream) throws IOException;
 
     static PayMetricsProcessor getProcessor() {
         return new PayMetricsProcessorImpl();

@@ -1,5 +1,7 @@
 package com.pay;
 
+import org.json.JSONObject;
+
 public interface PayError {
 
     /**
@@ -20,4 +22,7 @@ public interface PayError {
     static PayError generateError(int lineNumber, int code) {
         return new PayErrorImpl(lineNumber, code);
     }
+
+    JSONObject getJsonObject();
+
 }

@@ -1,5 +1,7 @@
 package com.pay;
 
+import org.json.JSONObject;
+
 class PayErrorImpl implements PayError {
 
     private final int m_lineNumber;
@@ -26,6 +28,16 @@ class PayErrorImpl implements PayError {
     @Override
     public Integer type() {
         return m_code;
+    }
+
+    @Override
+    public JSONObject getJsonObject() {
+        var outJsonFormat = new JSONObject();
+
+        outJsonFormat.put("line", this.line());
+        outJsonFormat.put("type", this.type());
+
+        return outJsonFormat;
     }
 
 }
