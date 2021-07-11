@@ -17,7 +17,7 @@ public interface CnpParts {
     /**
      * Születési megye.
      */
-    County judet();
+    County county();
 
     /**
      * Születési dátum.

@@ -41,7 +41,7 @@ class CnpPartsImpl implements CnpParts {
     }
 
     @Override
-    public County judet() {
+    public County county() {
         return m_county;
     }
 

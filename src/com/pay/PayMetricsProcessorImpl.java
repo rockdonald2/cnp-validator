@@ -15,8 +15,6 @@ import com.opencsv.exceptions.CsvException;
 import com.pay.exception.MissingDataException;
 import com.pay.exception.NegativePaymentException;
 import com.pay.exception.PayException;
-import org.apache.commons.lang3.tuple.ImmutablePair;
-import org.apache.commons.lang3.tuple.Pair;
 import com.cnp.exception.CnpException;
 import com.cnp.CnpParts;
 
@@ -29,21 +27,21 @@ class PayMetricsProcessorImpl implements PayMetricsProcessor {
 	public void process(InputStream paymentsInputStream, OutputStream metricsOutputStream) throws IOException {
 		var dataInput = loadData(paymentsInputStream);
 
-		var listOfCustomers = getCustomers(dataInput);
+		var mapOfCustomers = getCustomers(dataInput);
 
 		PayMetrics metrics;
-		if (listOfCustomers.size() != 0) {
-			var averagePaymentAmount = getAverage(listOfCustomers);
+		if (mapOfCustomers.size() != 0) {
+			var averagePaymentAmount = getAverage(mapOfCustomers);
 
-			var bigPayments = getBigPaymentsNumber(listOfCustomers);
+			var bigPayments = getBigPaymentsNumber(mapOfCustomers);
 
-			var paymentsByMinors = getPaymentsByMinors(listOfCustomers);
+			var paymentsByMinors = getPaymentsByMinors(mapOfCustomers);
 
-			var smallPayments = getSmallPaymentsNumber(listOfCustomers);
+			var smallPayments = getSmallPaymentsNumber(mapOfCustomers);
 
-			var totalAmountCapitalCity = getTotalAmountCapitalCity(listOfCustomers);
+			var totalAmountCapitalCity = getTotalAmountCapitalCity(mapOfCustomers);
 
-			var foreigners = getForeigners(listOfCustomers);
+			var foreigners = getForeigners(mapOfCustomers);
 
 			metrics = PayMetrics.getMetrics(foreigners, paymentsByMinors, bigPayments,
 							smallPayments, averagePaymentAmount, totalAmountCapitalCity, m_errors);
@@ -74,17 +72,17 @@ class PayMetricsProcessorImpl implements PayMetricsProcessor {
 	/**
 	 * Visszatéríti azon fizetések számát, amelyet 18 év alattiak intéztek.
 	 *
-	 * @param listOfCustomers
+	 * @param mapOfCustomers
 	 *                          tranzakciók
 	 * @return
 	 *          fizetések száma
 	 */
-	int getPaymentsByMinors(final ArrayList<Pair<CnpParts, BigDecimal>> listOfCustomers) {
+	int getPaymentsByMinors(final Map<CnpParts, ArrayList<BigDecimal>> mapOfCustomers) {
 		int counter = 0;
 		final var currentYear = Calendar.getInstance().get(Calendar.YEAR);
 
-		for (var customer : listOfCustomers) {
-			if (currentYear - customer.getLeft().birthDate().year() <= 18) {
+		for (var customer : mapOfCustomers.keySet()) {
+			if (currentYear - customer.birthDate().year() <= 18) {
 				counter++;
 			}
 		}
@@ -95,17 +93,19 @@ class PayMetricsProcessorImpl implements PayMetricsProcessor {
 	/**
 	 * Visszatéríti a bukaresti születésű román állampolgárok által intézett fizetések összegét.
 	 *
-	 * @param listOfCustomers
+	 * @param mapOfCustomers
 	 *                          tranzakciók
 	 * @return
 	 *          összeg
 	 */
-	BigDecimal getTotalAmountCapitalCity(final ArrayList<Pair<CnpParts, BigDecimal>> listOfCustomers) {
+	BigDecimal getTotalAmountCapitalCity(final Map<CnpParts, ArrayList<BigDecimal>> mapOfCustomers) {
 		var sum = BigDecimal.ZERO;
 
-		for (var customer : listOfCustomers) {
-			if (customer.getLeft().judet().getAbrv().equals("BU") && !customer.getLeft().foreigner()) {
-				sum = sum.add(customer.getRight());
+		for (var customer : mapOfCustomers.keySet()) {
+			if (customer.county().getAbrv().equals("BU") && !customer.foreigner()) {
+				for (var v : mapOfCustomers.get(customer)) {
+					sum = sum.add(v);
+				}
 			}
 		}
 
@@ -115,17 +115,17 @@ class PayMetricsProcessorImpl implements PayMetricsProcessor {
 	/**
 	 * Külföldi személyek száma, akik fizetést intéztek.
 	 *
-	 * @param listOfCustomers
+	 * @param mapOfCustomers
 	 *                          tranzakciók
 	 * @return
 	 *          külföldi személyek száma
 	 */
-	Integer getForeigners(final ArrayList<Pair<CnpParts, BigDecimal>> listOfCustomers) {
+	Integer getForeigners(final Map<CnpParts, ArrayList<BigDecimal>> mapOfCustomers) {
 		Set<String> coll = new HashSet<>();
 
-		for (var customer : listOfCustomers) {
-			if (customer.getLeft().foreigner()) {
-				coll.add(customer.getLeft().toString());
+		for (var customer : mapOfCustomers.keySet()) {
+			if (customer.foreigner()) {
+				coll.add(customer.toString());
 			}
 		}
 
@@ -135,50 +135,46 @@ class PayMetricsProcessorImpl implements PayMetricsProcessor {
 	/**
 	 * Visszatéríti a LIMIT-ig érvényes fizetések számát.
 	 *
-	 * @param listOfCustomers
+	 * @param mapOfCustomers
 	 *                          tranzakciók
 	 * @param limit
 	 *              határérték
 	 * @return
 	 *          fizetések száma
 	 */
-	Integer getPaymentsNumberByLimit(final ArrayList<Pair<CnpParts, BigDecimal>> listOfCustomers, final String limit) {
+	Integer getPaymentsNumberByLimit(final Map<CnpParts, ArrayList<BigDecimal>> mapOfCustomers, final String limit) {
 		int counter = 0;
 		final var upperLimit = new BigDecimal(limit);
 
-		for (var customer : listOfCustomers) {
-			if (customer.getRight().compareTo(upperLimit) <= 0) {
-				counter++;
+		for (var customer : mapOfCustomers.keySet()) {
+			for (var v : mapOfCustomers.get(customer)) {
+				if (v.compareTo(upperLimit) <= 0) {
+					counter++;
+				}
 			}
 		}
 
 		return counter;
 	}
 
-	Integer getSmallPaymentsNumber(final ArrayList<Pair<CnpParts, BigDecimal>> listOfCustomers) {
-		return getPaymentsNumberByLimit(listOfCustomers, "5000");
+	Integer getSmallPaymentsNumber(final Map<CnpParts, ArrayList<BigDecimal>> mapOfCustomers) {
+		return getPaymentsNumberByLimit(mapOfCustomers, "5000");
 	}
 
-	Integer getBigPaymentsNumber(final ArrayList<Pair<CnpParts, BigDecimal>> listOfCustomers) {
-		return listOfCustomers.size() - getPaymentsNumberByLimit(listOfCustomers, "5000");
+	Integer getBigPaymentsNumber(final Map<CnpParts, ArrayList<BigDecimal>> mapOfCustomers) {
+		return PayUtils.getTotalTranzactionNumber(mapOfCustomers) - getPaymentsNumberByLimit(mapOfCustomers, "5000");
 	}
 
 	/**
 	 * Visszatéríti a fizetések átlagát.
 	 *
-	 * @param listOfCustomers
+	 * @param mapOfCustomers
 	 *                          tranzakciók
 	 * @return
 	 *          fizetések átlaga
 	 */
-	BigDecimal getAverage(final ArrayList<Pair<CnpParts, BigDecimal>> listOfCustomers) {
-		var sum = BigDecimal.ZERO;
-
-		for (var customer : listOfCustomers) {
-			sum = sum.add(customer.getRight());
-		}
-
-		return sum.divide(BigDecimal.valueOf(listOfCustomers.size()), 2, RoundingMode.HALF_EVEN);
+	BigDecimal getAverage(final Map<CnpParts, ArrayList<BigDecimal>> mapOfCustomers) {
+		return PayUtils.sumTranzactions(mapOfCustomers).divide(BigDecimal.valueOf(PayUtils.getTotalTranzactionNumber(mapOfCustomers)), 2, RoundingMode.HALF_EVEN);
 	}
 
 	/**
@@ -216,9 +212,9 @@ class PayMetricsProcessorImpl implements PayMetricsProcessor {
 	 * @return
 	 *          tranzakciók
 	 */
-	ArrayList<Pair<CnpParts, BigDecimal>> getCustomers(final List<String[]> dataInput) {
+	Map<CnpParts, ArrayList<BigDecimal>> getCustomers(final List<String[]> dataInput) {
 		var validator = CnpValidator.getValidator();
-		var listOfCustomers = new ArrayList<Pair<CnpParts, BigDecimal>>();
+		var mapOfCustomers = new HashMap<CnpParts, ArrayList<BigDecimal>>();
 
 		for (int i = 0; i < dataInput.size(); i++) {
 			final var currentPayment = dataInput.get(i);
@@ -254,12 +250,14 @@ class PayMetricsProcessorImpl implements PayMetricsProcessor {
 				continue;
 			}
 
-			listOfCustomers.add(
-							new ImmutablePair<>(cnp, paymentAmount)
-			);
+			if (!mapOfCustomers.containsKey(cnp)) {
+				mapOfCustomers.put(cnp, new ArrayList<BigDecimal>());
+			}
+
+			mapOfCustomers.get(cnp).add(paymentAmount);
 		}
 
-		return listOfCustomers;
+		return mapOfCustomers;
 	}
 
 	/**
