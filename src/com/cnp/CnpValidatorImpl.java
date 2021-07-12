@@ -1,7 +1,5 @@
 package com.cnp;
 
-import java.lang.StringBuilder;
-
 import com.cnp.exception.*;
 import org.apache.commons.validator.GenericValidator;
 import org.apache.commons.lang3.StringUtils;

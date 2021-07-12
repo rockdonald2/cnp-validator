@@ -95,7 +95,6 @@ class PayMetricsImpl implements PayMetrics {
         for (var e : errors()) {
             errs.put(e.getJsonObject());
         }
-
         metrics.put("errors", errs);
 
         var o = new OutputStreamWriter(file);
