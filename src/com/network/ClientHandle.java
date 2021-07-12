@@ -24,7 +24,7 @@ public class ClientHandle extends Thread {
 			System.err.println("Server error: error while creating in/out streams");
 
 			// ! Nem akarjuk, hogy folytatódjon a folyamat, ha nincs honnan beolvasni az adatokat
-			return;
+			System.exit(1);
 		}
 
 		FileInputStream paymentsInputStream = null;
@@ -32,6 +32,8 @@ public class ClientHandle extends Thread {
 			paymentsInputStream = new FileInputStream(in.readLine());
 		} catch (IOException e) {
 			System.err.println("Server error: error while finding input tranzactions");
+
+			System.exit(1);
 		}
 
 		FileOutputStream paymentsOutputStream = null;
@@ -39,12 +41,16 @@ public class ClientHandle extends Thread {
 			paymentsOutputStream = new FileOutputStream(in.readLine());
 		} catch (IOException e) {
 			System.err.println("Server error: error while creating output JSON");
+
+			System.exit(1);
 		}
 
 		try {
 			PayMetricsProcessor.getProcessor().process(paymentsInputStream, paymentsOutputStream);
 		} catch (IOException e) {
 			System.err.println("Server error: error while processing payments");
+
+			System.exit(1);
 		}
 
 		out.println("Successfully processed the payments");
@@ -56,6 +62,8 @@ public class ClientHandle extends Thread {
 			client.close();
 		} catch (IOException e) {
 			System.err.println("Server error: error while closing socket");
+
+			System.exit(1);
 		}
 	}
 

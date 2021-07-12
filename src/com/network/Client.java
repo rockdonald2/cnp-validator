@@ -21,6 +21,8 @@ public class Client {
 			s = new Socket("localhost", 11111);
 		} catch (IOException e) {
 			System.err.println("Client error: error while creating socket");
+
+			System.exit(1);
 		}
 
 		BufferedReader in = null;
@@ -31,7 +33,7 @@ public class Client {
 		} catch (IOException e) {
 			System.err.println("Client error: error while in/out streams");
 
-			return;
+			System.exit(1);
 		}
 
 		out.println(inputPath);
@@ -42,6 +44,8 @@ public class Client {
 			System.out.println("Server answer: " + in.readLine());
 		} catch (IOException e) {
 			System.err.println("Client error: error while reading server answer");
+
+			System.exit(1);
 		}
 
 		try {
