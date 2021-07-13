@@ -1,28 +1,48 @@
 package com.network;
 
+import com.gui.ClientFrame;
+
+import javax.swing.*;
 import java.io.*;
 import java.net.Socket;
 
 public class Client {
 
-	private final String inputPath;
-	private final String outputPath;
+	private String inputPath;
+	private String outputPath;
 
-	public Client(String inputPath, String outputPath) {
+	public Client() { }
+
+	public void setInputPath(String inputPath) {
 		this.inputPath = inputPath;
-		this.outputPath = outputPath;
-
-		requestProcess();
 	}
 
-	private void requestProcess() {
+	public void setOutputPath(String outputPath) {
+		this.outputPath = outputPath;
+	}
+
+	public String getInputPath() {
+		return inputPath;
+	}
+
+	public String getOutputPath() {
+		return outputPath;
+	}
+
+	public void requestProcess() {
+		if (this.inputPath == null || this.outputPath == null) {
+			ClientFrame.showErrorMessage("Client error: input or out paths are not set");
+
+			return;
+		}
+
 		Socket s = null;
 		try {
 			s = new Socket("localhost", 11111);
 		} catch (IOException e) {
-			System.err.println("Client error: error while creating socket");
+			ClientFrame.showErrorMessage("Client error: error while creating socket");
 
-			System.exit(1);
+			return;
 		}
 
 		BufferedReader in = null;
@@ -31,9 +51,9 @@ public class Client {
 			in = new BufferedReader(new InputStreamReader(s.getInputStream()));
 			out = new PrintWriter(new OutputStreamWriter(s.getOutputStream()));
 		} catch (IOException e) {
-			System.err.println("Client error: error while in/out streams");
+			ClientFrame.showErrorMessage("Client error: error while in/out streams");
 
-			System.exit(1);
+			return;
 		}
 
 		out.println(inputPath);
@@ -42,10 +62,12 @@ public class Client {
 
 		try {
 			System.out.println("Server answer: " + in.readLine());
-		} catch (IOException e) {
-			System.err.println("Client error: error while reading server answer");
 
-			System.exit(1);
+			ClientFrame.showInformationMessage("Payments successfully processed");
+		} catch (IOException e) {
+			ClientFrame.showErrorMessage("Client error: error while reading server answer");
+
+			return;
 		}
 
 		try {
@@ -53,18 +75,15 @@ public class Client {
 			out.close();
 			s.close();
 		} catch (IOException e) {
-			System.err.println("Client error: error while reading server answer");
+			ClientFrame.showErrorMessage("Client error: error while reading server answer");
 		}
 	}
 
 	public static void main(String[] args) {
-		if (args.length < 2) {
-			System.out.println("Usage: Client <<input>.csv> <<output>.json>");
-
-			System.exit(1);
-		}
-
-		new Client(args[0], args[1]);
+		ClientFrame cf = new ClientFrame(new Client());
+		cf.setBounds(100, 100, 250, 200);
+		cf.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		cf.setVisible(true);
 	}
 
 }

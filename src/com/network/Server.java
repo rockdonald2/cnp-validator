@@ -1,5 +1,7 @@
 package com.network;
 
+import com.gui.ClientFrame;
+
 import java.io.IOException;
 import java.net.ServerSocket;
 

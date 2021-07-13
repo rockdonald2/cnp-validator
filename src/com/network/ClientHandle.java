@@ -1,5 +1,6 @@
 package com.network;
 
+import com.gui.ClientFrame;
 import com.pay.PayMetricsProcessor;
 
 import java.io.*;
@@ -21,36 +22,36 @@ public class ClientHandle extends Thread {
 			in = new BufferedReader(new InputStreamReader(client.getInputStream()));
 			out = new PrintWriter(new OutputStreamWriter(client.getOutputStream()));
 		} catch (IOException e) {
-			System.err.println("Server error: error while creating in/out streams");
+			ClientFrame.showErrorMessage("Server error: error while creating in/out streams");
 
 			// ! Nem akarjuk, hogy folytatódjon a folyamat, ha nincs honnan beolvasni az adatokat
-			System.exit(1);
+			return;
 		}
 
 		FileInputStream paymentsInputStream = null;
 		try {
 			paymentsInputStream = new FileInputStream(in.readLine());
 		} catch (IOException e) {
-			System.err.println("Server error: error while finding input tranzactions");
+			ClientFrame.showErrorMessage("Server error: error while finding input tranzactions");
 
-			System.exit(1);
+			return;
 		}
 
 		FileOutputStream paymentsOutputStream = null;
 		try {
 			paymentsOutputStream = new FileOutputStream(in.readLine());
 		} catch (IOException e) {
-			System.err.println("Server error: error while creating output JSON");
+			ClientFrame.showErrorMessage("Server error: error while finding output file");
 
-			System.exit(1);
+			return;
 		}
 
 		try {
 			PayMetricsProcessor.getProcessor().process(paymentsInputStream, paymentsOutputStream);
 		} catch (IOException e) {
-			System.err.println("Server error: error while processing payments");
+			ClientFrame.showErrorMessage("Server error: error while processing payments");
 
-			System.exit(1);
+			return;
 		}
 
 		out.println("Successfully processed the payments");
@@ -61,9 +62,7 @@ public class ClientHandle extends Thread {
 			out.close();
 			client.close();
 		} catch (IOException e) {
-			System.err.println("Server error: error while closing socket");
-
-			System.exit(1);
+			ClientFrame.showErrorMessage("Server error: error while closing socket");
 		}
 	}
 
