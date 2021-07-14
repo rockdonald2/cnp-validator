@@ -1,6 +1,8 @@
 package com.cnp;
 
-public interface CnpParts {
+import java.io.Serializable;
+
+public interface CnpParts extends Serializable {
 
     /**
      * CNP első számjegye alapján kikövetkeztett nem.
@@ -28,5 +30,7 @@ public interface CnpParts {
      * Sorszám.
      */
     Short orderNumber();
+
+    String cnp();
 
 }

@@ -7,7 +7,7 @@ import java.net.ServerSocket;
 
 public class Server {
 
-	private static boolean IS_RUNNING = true;
+	public static boolean IS_RUNNING = true;
 
 	public static void main(String[] args) {
 		try {

@@ -54,7 +54,7 @@ class CnpValidatorImpl implements CnpValidator {
 
         var orderNumber = getOrderNumber(cnp);
 
-        return new CnpPartsImpl(sex, foreigner, birthDate, birthCounty, orderNumber);
+        return new CnpPartsImpl(sex, foreigner, birthDate, birthCounty, orderNumber, cnp);
     }
 
     /**

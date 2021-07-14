@@ -3,7 +3,9 @@ package com.cnp;
 import com.cnp.exception.CnpException;
 import com.cnp.exception.InvalidSexException;
 
-public enum Sex {
+import java.io.Serializable;
+
+public enum Sex implements Serializable {
 
     M,
     F,

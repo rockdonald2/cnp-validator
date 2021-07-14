@@ -1,12 +1,15 @@
 package com.cnp;
 
-class CnpPartsImpl implements CnpParts {
+import java.io.Serializable;
+
+class CnpPartsImpl implements CnpParts, Serializable {
 
     private final Sex m_sex;
     private final Boolean m_isForeigner;
     private final County m_county;
     private final CalDate m_birthDate;
     private final Short m_orderNumber;
+    private final String m_cnp;
 
     /**
      * Értelmezhető CNP példány, amelynek adatai lekérdezhetőek.
@@ -22,12 +25,13 @@ class CnpPartsImpl implements CnpParts {
      * @param orderNumber
      *              sorszám
      */
-    CnpPartsImpl(Sex sex, Boolean foreigner, CalDate birthDate, County county, Short orderNumber) {
+    CnpPartsImpl(Sex sex, Boolean foreigner, CalDate birthDate, County county, Short orderNumber, String cnp) {
         m_sex = sex;
         m_isForeigner = foreigner;
         m_county = county;
         m_birthDate = birthDate;
         m_orderNumber = orderNumber;
+        m_cnp = cnp;
     }
 
     @Override
@@ -55,6 +59,9 @@ class CnpPartsImpl implements CnpParts {
         return m_orderNumber;
     }
 
+    @Override
+    public String cnp() { return m_cnp; }
+
     /**
      * Vizualizálja a személy CNP-ből kikövetkeztett adatait.
      *
@@ -62,11 +69,7 @@ class CnpPartsImpl implements CnpParts {
      */
     @Override
     public String toString() {
-        return m_sex + " -- "
-                + m_isForeigner + " -- "
-                + m_birthDate + " -- "
-                + m_county.getAbrv() + " -- "
-                + m_orderNumber;
+        return m_cnp;
     }
 
 }

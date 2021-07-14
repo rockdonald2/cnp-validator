@@ -1,17 +1,23 @@
 package com.network;
 
+import com.cnp.CnpParts;
 import com.gui.ClientFrame;
 
 import javax.swing.*;
 import java.io.*;
+import java.math.BigDecimal;
 import java.net.Socket;
+import java.util.ArrayList;
+import java.util.Map;
 
 public class Client {
 
 	private String inputPath;
 	private String outputPath;
+	private ClientFrame frame;
 
-	public Client() { }
+	public Client() {
+	}
 
 	public void setInputPath(String inputPath) {
 		this.inputPath = inputPath;
@@ -19,6 +25,14 @@ public class Client {
 
 	public void setOutputPath(String outputPath) {
 		this.outputPath = outputPath;
+	}
+
+	public void setFrame(ClientFrame frame) {
+		this.frame = frame;
+	}
+
+	public ClientFrame getFrame() {
+		return frame;
 	}
 
 	public String getInputPath() {
@@ -51,7 +65,7 @@ public class Client {
 			in = new BufferedReader(new InputStreamReader(s.getInputStream()));
 			out = new PrintWriter(new OutputStreamWriter(s.getOutputStream()));
 		} catch (IOException e) {
-			ClientFrame.showErrorMessage("Client error: error while in/out streams");
+			ClientFrame.showErrorMessage("Client error: error while creating in/out streams");
 
 			return;
 		}
@@ -66,22 +80,33 @@ public class Client {
 			ClientFrame.showInformationMessage("Payments successfully processed");
 		} catch (IOException e) {
 			ClientFrame.showErrorMessage("Client error: error while reading server answer");
+		}
 
-			return;
+		ObjectInputStream inClient = null;
+		try {
+			inClient = new ObjectInputStream(s.getInputStream());
+			Map<CnpParts, ArrayList<BigDecimal>> mapOfCustomers = (Map<CnpParts, ArrayList<BigDecimal>>) inClient.readObject();
+
+			frame.sendMap(mapOfCustomers);
+		} catch (IOException | ClassNotFoundException e) {
+			System.out.println("Client: " + e);
+			ClientFrame.showErrorMessage("Client error: error while recreating map of customers");
 		}
 
 		try {
 			in.close();
 			out.close();
 			s.close();
+			inClient.close();
 		} catch (IOException e) {
 			ClientFrame.showErrorMessage("Client error: error while reading server answer");
 		}
 	}
 
 	public static void main(String[] args) {
-		ClientFrame cf = new ClientFrame(new Client());
-		cf.setBounds(100, 100, 250, 200);
+		ClientFrame cf = new ClientFrame();
+
+		cf.setBounds(100, 100, 400, 400);
 		cf.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		cf.setVisible(true);
 	}

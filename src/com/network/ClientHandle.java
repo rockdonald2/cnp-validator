@@ -1,10 +1,14 @@
 package com.network;
 
+import com.cnp.CnpParts;
 import com.gui.ClientFrame;
 import com.pay.PayMetricsProcessor;
 
 import java.io.*;
+import java.math.BigDecimal;
 import java.net.Socket;
+import java.util.ArrayList;
+import java.util.Map;
 
 public class ClientHandle extends Thread {
 
@@ -23,9 +27,6 @@ public class ClientHandle extends Thread {
 			out = new PrintWriter(new OutputStreamWriter(client.getOutputStream()));
 		} catch (IOException e) {
 			ClientFrame.showErrorMessage("Server error: error while creating in/out streams");
-
-			// ! Nem akarjuk, hogy folytatódjon a folyamat, ha nincs honnan beolvasni az adatokat
-			return;
 		}
 
 		FileInputStream paymentsInputStream = null;
@@ -46,21 +47,31 @@ public class ClientHandle extends Thread {
 			return;
 		}
 
+		Map<CnpParts, ArrayList<BigDecimal>> mapOfCustomers = null;
 		try {
-			PayMetricsProcessor.getProcessor().process(paymentsInputStream, paymentsOutputStream);
+			mapOfCustomers = PayMetricsProcessor.getProcessor().process(paymentsInputStream, paymentsOutputStream);
 		} catch (IOException e) {
 			ClientFrame.showErrorMessage("Server error: error while processing payments");
-
-			return;
 		}
 
 		out.println("Successfully processed the payments");
 		out.flush();
 
+		ObjectOutputStream outClient = null;
+		try {
+			outClient = new ObjectOutputStream(client.getOutputStream());
+			outClient.writeObject(mapOfCustomers);
+			outClient.flush();
+		} catch (IOException e) {
+			System.out.println("Server: " + e);
+			ClientFrame.showErrorMessage("Server error: error while serializing map of customers");
+		}
+
 		try {
 			in.close();
 			out.close();
 			client.close();
+			outClient.close();
 		} catch (IOException e) {
 			ClientFrame.showErrorMessage("Server error: error while closing socket");
 		}

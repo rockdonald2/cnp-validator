@@ -3,10 +3,11 @@ package com.cnp;
 import com.cnp.exception.CnpException;
 import com.cnp.exception.InvalidCountyException;
 
+import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
 
-public enum County {
+public enum County implements Serializable {
 
     AB("AB", 1),
     AR("AR", 2),

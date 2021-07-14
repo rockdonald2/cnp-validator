@@ -1,6 +1,11 @@
 package com.pay;
 
+import com.cnp.CnpParts;
+
 import java.io.*;
+import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.Map;
 
 public interface PayMetricsProcessor {
 
@@ -15,7 +20,7 @@ public interface PayMetricsProcessor {
      * @throws IOException
      *             ha valamilyen I/O hiba jelenne meg
      */
-    void process(FileInputStream paymentsInputStream, FileOutputStream metricsOutputStream) throws IOException;
+    Map<CnpParts, ArrayList<BigDecimal>> process(FileInputStream paymentsInputStream, FileOutputStream metricsOutputStream) throws IOException;
 
     static PayMetricsProcessor getProcessor() {
         return new PayMetricsProcessorImpl();

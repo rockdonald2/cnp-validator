@@ -1,6 +1,8 @@
 package com.cnp;
 
-public interface CalDate {
+import java.io.Serializable;
+
+public interface CalDate extends Serializable {
 
     Short year();
 

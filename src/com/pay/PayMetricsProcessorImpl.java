@@ -21,7 +21,7 @@ class PayMetricsProcessorImpl implements PayMetricsProcessor {
 	private final Set<PayError> m_errors = new HashSet<>();
 
 	@Override
-	public void process(FileInputStream paymentsInputStream, FileOutputStream metricsOutputStream) throws IOException {
+	public Map<CnpParts, ArrayList<BigDecimal>> process(FileInputStream paymentsInputStream, FileOutputStream metricsOutputStream) throws IOException {
 		var dataInput = loadData(paymentsInputStream);
 
 		var mapOfCustomers = getCustomers(dataInput);
@@ -47,6 +47,7 @@ class PayMetricsProcessorImpl implements PayMetricsProcessor {
 		}
 
 		metrics.writeToFile(metricsOutputStream);
+		return mapOfCustomers;
 	}
 
 	/**
@@ -203,11 +204,11 @@ class PayMetricsProcessorImpl implements PayMetricsProcessor {
 				continue;
 			}
 
-			CnpParts cnp;
+			CnpParts cnp = null;
 			BigDecimal paymentAmount;
 
 			try {
-				if (currentPayment[0].equals("")|| currentPayment[1].equals("")) {
+				if (currentPayment[0].equals("") || currentPayment[1].equals("")) {
 					throw new MissingDataException("Missing data from line");
 				}
 
@@ -222,12 +223,20 @@ class PayMetricsProcessorImpl implements PayMetricsProcessor {
 				continue;
 			}
 
-			try {
-				cnp = validator.validateCnp(currentPayment[0]);
-			} catch (CnpException e) {
-				System.out.println(e.getMessage());
-				writeError(i + 1, e.getCodeType());
-				continue;
+			for (var j : mapOfCustomers.keySet()) {
+				if (j.toString().equals(currentPayment[0])) {
+					cnp = j;
+				}
+			}
+
+			if (cnp == null) {
+				try {
+					cnp = validator.validateCnp(currentPayment[0]);
+				} catch (CnpException e) {
+					System.out.println(e.getMessage());
+					writeError(i + 1, e.getCodeType());
+					continue;
+				}
 			}
 
 			if (!mapOfCustomers.containsKey(cnp)) {

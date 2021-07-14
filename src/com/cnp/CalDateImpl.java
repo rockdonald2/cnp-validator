@@ -1,6 +1,8 @@
 package com.cnp;
 
-class CalDateImpl implements CalDate{
+import java.io.Serializable;
+
+class CalDateImpl implements CalDate, Serializable {
 
     private final short m_year;
     private final byte m_month;
