@@ -2,7 +2,6 @@ package com.gui;
 
 import com.cnp.CnpParts;
 import com.network.Client;
-import com.network.Server;
 import org.json.JSONObject;
 import org.json.JSONTokener;
 
@@ -34,6 +33,7 @@ public class ClientController {
 	public void setInputPath(File file) {
 		if (file == null) {
 			ClientView.showErrorMessage("Usage error: no file selected");
+			setInputButtonColor(Color.RED);
 
 			return;
 		}
@@ -54,6 +54,7 @@ public class ClientController {
 	public void setOutputPath(File file) {
 		if (file == null) {
 			ClientView.showErrorMessage("Usage error: no file selected");
+			setOutputButtonColor(Color.RED);
 
 			return;
 		}
@@ -148,10 +149,6 @@ public class ClientController {
 
 	public static void main(String[] args) {
 		ClientController controller = new ClientController();
-	}
-
-	public void stopServer() {
-
 	}
 
 }

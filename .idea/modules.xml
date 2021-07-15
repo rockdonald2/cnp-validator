@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/AxonFinal.iml" filepath="$PROJECT_DIR$/AxonFinal.iml" />
+      <module fileurl="file://$PROJECT_DIR$/CodeSpring.iml" filepath="$PROJECT_DIR$/CodeSpring.iml" />
     </modules>
   </component>
 </project>

@@ -1,13 +1,11 @@
 package com.gui;
 
 import com.cnp.CnpParts;
+import com.formdev.flatlaf.FlatLightLaf;
 import org.json.JSONObject;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.KeyEvent;
 import java.io.File;
 import java.math.BigDecimal;
 
@@ -21,15 +19,19 @@ public class ClientView extends JFrame {
 	private final JPanel contentPanel;
 	private final JList cnpList;
 	private final JScrollPane scrollableList;
-	private JMenuBar menuBar;
 
 	private ClientController controller;
 
 	public ClientView() {
+		try {
+			UIManager.setLookAndFeel( new FlatLightLaf() );
+		} catch( Exception ex ) {
+			System.err.println( "Failed to initialize LaF" );
+		}
+
 		this.setTitle("Payments processor");
 
-		JMenuBar menuBar = new JMenuBar();
-
+		/*JMenuBar menuBar = new JMenuBar();
 		JMenu menu = new JMenu("Options");
 		menu.getAccessibleContext().setAccessibleDescription("Server instructions");
 		menuBar.add(menu);
@@ -38,10 +40,11 @@ public class ClientView extends JFrame {
 		menuItem.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				controller.stopServer();
 				System.out.println("stopping server");
 			}
 		});
+		this.setJMenuBar(menuBar);
+		*/
 
 		this.requestProcess = new JButton("Request process of payments");
 		this.requestProcess.setEnabled(false);
@@ -56,8 +59,6 @@ public class ClientView extends JFrame {
 		contentPanel = new JPanel();
 		contentPanel.setLayout(new GridLayout(6, 1));
 		contentPanel.setPreferredSize(new Dimension(this.getWidth(), this.getHeight()));
-
-		this.setJMenuBar(menuBar);
 
 		contentPanel.add(showInputFileChooser);
 		contentPanel.add(showOutputFileChooser);
