@@ -16,15 +16,8 @@ public class Client {
 	private String outputPath;
 	private ClientController controller;
 
-	public Client() {
-	}
-
-	public void setController(ClientController controller) {
+	public Client(ClientController controller) {
 		this.controller = controller;
-	}
-
-	public ClientController getController() {
-		return controller;
 	}
 
 	public void setInputPath(String inputPath) {
@@ -82,6 +75,10 @@ public class Client {
 			controller.receiveMapOfCustomers(mapOfCustomers);
 		} catch (IOException | ClassNotFoundException e) {
 			ClientView.showErrorMessage("Client error: error while recreating map of customers");
+
+			controller.setRequestProcessActive(false);
+			controller.setShowMetricesActive(false);
+			controller.setShowDataActive(false);
 		}
 
 		try {

@@ -82,10 +82,9 @@ public class ClientController {
 
 	public void requestProcess() {
 		if (model.validInputs()) {
-			Client client = new Client();
+			Client client = new Client(this);
 			client.setInputPath(model.getCsvInputPath());
 			client.setOutputPath(model.getJsonOutputPath());
-			client.setController(this);
 			client.requestProcess();
 		} else {
 			if (model.isWrongCsvInput()) {

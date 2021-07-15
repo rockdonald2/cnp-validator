@@ -27,6 +27,8 @@ public class ClientHandle extends Thread {
 			in = new BufferedReader(new InputStreamReader(client.getInputStream()));
 		} catch (IOException e) {
 			ClientView.showErrorMessage("Server error: error while creating in/out streams");
+
+			return;
 		}
 
 		FileInputStream paymentsInputStream = null;
@@ -52,6 +54,8 @@ public class ClientHandle extends Thread {
 			mapOfCustomers = PayMetricsProcessor.getProcessor().process(paymentsInputStream, paymentsOutputStream);
 		} catch (IOException e) {
 			ClientView.showErrorMessage("Server error: error while processing payments");
+
+			return;
 		}
 
 		ObjectOutputStream outClient = null;

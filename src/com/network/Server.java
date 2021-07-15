@@ -10,8 +10,7 @@ public class Server {
 			var ss = new ServerSocket(11111);
 
 			while (true) {
-				ClientHandle ch = new ClientHandle(ss.accept());
-				ch.start();
+				(new ClientHandle(ss.accept())).start();
 			}
 		} catch (IOException e) {
 			System.err.println("Error while creating ServerSocket");

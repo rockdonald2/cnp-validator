@@ -1,7 +1,7 @@
 package com.gui;
 
 import com.cnp.CnpParts;
-import com.formdev.flatlaf.FlatLightLaf;
+import com.formdev.flatlaf.FlatDarkLaf;
 import org.json.JSONObject;
 
 import javax.swing.*;
@@ -24,27 +24,12 @@ public class ClientView extends JFrame {
 
 	public ClientView() {
 		try {
-			UIManager.setLookAndFeel( new FlatLightLaf() );
+			UIManager.setLookAndFeel(new FlatDarkLaf());
 		} catch( Exception ex ) {
 			System.err.println( "Failed to initialize LaF" );
 		}
 
 		this.setTitle("Payments processor");
-
-		/*JMenuBar menuBar = new JMenuBar();
-		JMenu menu = new JMenu("Options");
-		menu.getAccessibleContext().setAccessibleDescription("Server instructions");
-		menuBar.add(menu);
-		JMenuItem menuItem = new JMenuItem("Stop server");
-		menu.add(menuItem);
-		menuItem.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				System.out.println("stopping server");
-			}
-		});
-		this.setJMenuBar(menuBar);
-		*/
 
 		this.requestProcess = new JButton("Request process of payments");
 		this.requestProcess.setEnabled(false);
