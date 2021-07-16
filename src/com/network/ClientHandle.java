@@ -12,14 +12,16 @@ import java.util.Map;
 
 public class ClientHandle extends Thread {
 
-	Socket client;
-
-	private boolean IS_RUNNING = true;
+	private Socket client;
 
 	public ClientHandle(Socket client) {
 		this.client = client;
 	}
 
+	/**
+	 * Kezeli a kliens kérését. Megkapja a kimeneti és bemeneti állományok elérési útvonalát.
+	 * Majd kérve egy feldolgozó egységet, elvégzi a feldolgozást, az eredményként kapott tranzakciókat visszaküldi az adatfolyamon.
+	 */
 	@Override
 	public void run() {
 		BufferedReader in = null;

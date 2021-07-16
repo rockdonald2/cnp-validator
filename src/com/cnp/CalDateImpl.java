@@ -4,9 +4,9 @@ import java.io.Serializable;
 
 class CalDateImpl implements CalDate, Serializable {
 
-    private final short m_year;
-    private final byte m_month;
-    private final byte m_day;
+    private final short year;
+    private final byte month;
+    private final byte day;
 
     /**
      * Létrehoz egy értelmezhető dátumpéldányt.
@@ -16,24 +16,24 @@ class CalDateImpl implements CalDate, Serializable {
      */
     CalDateImpl(String date) {
         var dateElements = date.split("-");
-        m_year = Short.parseShort(dateElements[0]);
-        m_month = Byte.parseByte(dateElements[1]);
-        m_day = Byte.parseByte(dateElements[2]);
+        this.year = Short.parseShort(dateElements[0]);
+        this.month = Byte.parseByte(dateElements[1]);
+        this.day = Byte.parseByte(dateElements[2]);
     }
 
     @Override
     public Short year() {
-        return m_year;
+        return this.year;
     }
 
     @Override
     public Byte month() {
-        return m_month;
+        return this.month;
     }
 
     @Override
     public Byte day() {
-        return m_day;
+        return this.day;
     }
 
     /**
@@ -43,7 +43,7 @@ class CalDateImpl implements CalDate, Serializable {
      */
     @Override
     public String toString() {
-        return m_year + "-" + m_month + "-" + m_day;
+        return this.year + "-" + this.month + "-" + this.day;
     }
 
 }

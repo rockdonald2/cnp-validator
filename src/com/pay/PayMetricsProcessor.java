@@ -22,6 +22,10 @@ public interface PayMetricsProcessor {
      */
     Map<CnpParts, ArrayList<BigDecimal>> process(FileInputStream paymentsInputStream, FileOutputStream metricsOutputStream) throws IOException;
 
+    /**
+     * Visszatérít egy használható PayMetricsProcessor-t.
+     * @return PayMetricsProcessor
+     */
     static PayMetricsProcessor getProcessor() {
         return new PayMetricsProcessorImpl();
     }

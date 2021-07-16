@@ -8,6 +8,12 @@ import java.util.Map;
 
 public class PayUtils {
 
+	/**
+	 * Visszatéríti az össztranzakciók számát.
+	 * @param mapOfCustomers
+	 * 											tranzakciók
+	 * @return összfizetések száma Integer
+	 */
 	static int getTotalTranzactionNumber(Map<CnpParts, ArrayList<BigDecimal>> mapOfCustomers) {
 		int counter = 0;
 
@@ -20,6 +26,12 @@ public class PayUtils {
 		return counter;
 	}
 
+	/**
+	 * Visszatéríti a tranzakciók összegét.
+	 * @param mapOfCustomers
+	 * 											tranzakciók
+	 * @return BigDecimal
+	 */
 	static BigDecimal sumTranzactions(Map<CnpParts, ArrayList<BigDecimal>> mapOfCustomers) {
 		var sum = BigDecimal.ZERO;
 

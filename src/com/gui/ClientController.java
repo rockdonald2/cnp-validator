@@ -20,6 +20,9 @@ public class ClientController {
 	private ClientModel model;
 	private ClientView view;
 
+	/**
+	 * Létrehozza a megfelelő Model-t és View-t, és megjeleníti a felhasználónak a View-t.
+	 */
 	public ClientController() {
 		this.model = new ClientModel();
 		this.view = new ClientView();
@@ -30,6 +33,11 @@ public class ClientController {
 		this.view.setVisible(true);
 	}
 
+	/**
+	 * Beállítja a bemeneti állomány elérési útvonalát a View-tól kapott File-al.
+	 * @param file
+	 * 						bemeneti .csv állomány
+	 */
 	public void setInputPath(File file) {
 		if (file == null) {
 			ClientView.showErrorMessage("Usage error: no file selected");
@@ -51,6 +59,11 @@ public class ClientController {
 		}
 	}
 
+	/**
+	 * Beállítja a kimeneti állomány elérési útvonalát a View-tól kapott File-al.
+	 * @param file
+	 * 						kimeneti .json állomány
+	 */
 	public void setOutputPath(File file) {
 		if (file == null) {
 			ClientView.showErrorMessage("Usage error: no file selected");
@@ -80,6 +93,9 @@ public class ClientController {
 		view.getShowOutputFileChooser().setBackground(color);
 	}
 
+	/**
+	 * Létrehoz egy új kliens-t, amely elvégzi a bemeneti és kimeneti állományokkal a megfelelő tranzakciócsomag feldolgozást.
+	 */
 	public void requestProcess() {
 		if (model.validInputs()) {
 			Client client = new Client(this);
@@ -97,6 +113,11 @@ public class ClientController {
 		}
 	}
 
+	/**
+	 * Megjeleníti, felhasználva a View-t, az adott kliens adatait egy felugró ablak formájában.
+	 * @param client
+	 * 							megjelenítendő kliens
+	 */
 	public void requestShowData(CnpParts client) {
 		if (client == null) {
 			ClientView.showInformationMessage("Please select a CNP first");
@@ -107,22 +128,35 @@ public class ClientController {
 		view.showClientData(client, model.getClientPayments(client));
 	}
 
+	/**
+	 * Megjeleníti a feldolgozási eredményt, a kimeneti .json állományt felhasználva.
+	 */
 	public void requestShowMetrices() {
 		InputStream is = null;
 		try {
 			is = new FileInputStream(model.getJsonOutputPath());
 		} catch (FileNotFoundException fileNotFoundException) {
 			ClientView.showErrorMessage("Usage error: .json output file not found");
+
+			return;
 		}
 
 		view.showMetricesData(new JSONObject(new JSONTokener(is)));
 	}
 
+	/**
+	 * A kliens-től visszakapja a tranzakciókat, amit átad a Model-nek.
+	 * @param mapOfCustomers
+	 * 											tranzakciók
+	 */
 	public void receiveMapOfCustomers(Map<CnpParts, ArrayList<BigDecimal>> mapOfCustomers) {
 		model.setMapOfCustomers(mapOfCustomers);
 		populateList();
 	}
 
+	/**
+	 * Feltölti a View CNP listáját a megfelelőkkel, majd kéri a View frissítését.
+	 */
 	private void populateList() {
 		view.getCnpList().setListData(model.getMapOfCustomers().keySet().toArray());
 		setShowDataActive(true);

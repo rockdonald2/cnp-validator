@@ -8,6 +8,24 @@ import java.util.Set;
 
 public interface PayMetrics extends Serializable {
 
+    /**
+     * Visszatérít egy PayMetrics instanciát a paraméterként megadott állapottal.
+     * @param foreigners
+     *                   külföldi személyek által intézett fizetések száma
+     * @param paymentsByMinors
+     *                          fiatalkorúak által intézett fizetések száma
+     * @param bigPayments
+     *                      5000 RON fölötti fizetések száma
+     * @param smallPayments
+     *                      5000 RON alatti fizetések száma
+     * @param averagePaymentAmount
+     *                              átlagfizetés
+     * @param totalAmountCapitalCity
+     *                              összfizetés, olyan kliensek, akik Bukarestben születtek
+     * @param errors
+     *              feldolgozási hibák
+     * @return PayMetrics
+     */
     static PayMetrics getMetrics(int foreigners, int paymentsByMinors, int bigPayments,
                                  int smallPayments, BigDecimal averagePaymentAmount,
                                  BigDecimal totalAmountCapitalCity, Set<PayError> errors) {
@@ -49,6 +67,11 @@ public interface PayMetrics extends Serializable {
      */
     Set<PayError> errors();
 
+    /**
+     * Kiírja formázott JSON-ként az adott PayMetrics instancia állapotát a megadott File-ba.
+     * @param metricsOutputStream
+     *                              kimeneti File adatfolyama
+     */
     void writeToFile(FileOutputStream metricsOutputStream);
 
 }

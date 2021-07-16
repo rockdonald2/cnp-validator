@@ -15,6 +15,10 @@ public interface CnpValidator {
      */
     CnpParts validateCnp(String cnp) throws CnpException;
 
+    /**
+     * Visszatérít egy használható CnpValidator-t.
+     * @return CnpValidator
+     */
     static CnpValidator getValidator() {
         return new CnpValidatorImpl();
     }

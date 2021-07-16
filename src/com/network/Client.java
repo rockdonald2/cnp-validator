@@ -36,6 +36,11 @@ public class Client {
 		return outputPath;
 	}
 
+	/**
+	 * Elvégez egy tranzakciócsomag feldolgozást az állapotként tárolt input és output eléréseket felhasználva.
+	 * Elküldi a szerver-nek az említett elérési útakat, kimeneti adatként pedig a tranzakciókat kapja.
+	 * A tranzakciókat átadja a ClientController instanciának, amely elvégzi a megjelenítés kiadását.
+	 */
 	public void requestProcess() {
 		if (this.inputPath == null || this.outputPath == null) {
 			ClientView.showErrorMessage("Client error: input or output paths are not set");

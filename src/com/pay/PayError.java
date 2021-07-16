@@ -19,10 +19,22 @@ public interface PayError {
      */
     Integer type();
 
+    /**
+     * Létrehoz egy adott hibát a paraméterként megadott állapottal.
+     * @param lineNumber
+     *                  sor, ahol a hiba előfordult
+     * @param code
+     *             a hiba kódja
+     * @return PayError
+     */
     static PayError generateError(int lineNumber, int code) {
         return new PayErrorImpl(lineNumber, code);
     }
 
+    /**
+     * Visszatéríti az adott hibát formázott JSON-ként.
+     * @return JSONObject
+     */
     JSONObject getJsonObject();
 
 }

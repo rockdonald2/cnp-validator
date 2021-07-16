@@ -58,31 +58,31 @@ public enum County implements Serializable {
     CL("CL", 51),
     GR("GR", 52);
 
-    private static final Map<Byte, County> m_map = new HashMap<>();
+    private static final Map<Byte, County> map = new HashMap<>();
 
-    /*
+    /**
      * Létrehoz egy Map-et, amelyen keresztül gyorsabban megy az adott megye kikeresése.
      */
     static {
         for (final var j : County.values()) {
-            m_map.put(j.getCode(), j);
+            map.put(j.getCode(), j);
         }
     }
 
-    private final String m_abrv;
-    private final byte m_code;
+    private final String abrv;
+    private final byte code;
 
     County(String abrv, int code) {
-        m_abrv = abrv;
-        m_code = (byte) code;
+        this.abrv = abrv;
+        this.code = (byte) code;
     }
 
     public String getAbrv() {
-        return m_abrv;
+        return this.abrv;
     }
 
     public byte getCode() {
-        return m_code;
+        return this.code;
     }
 
     /**
@@ -94,11 +94,11 @@ public enum County implements Serializable {
      */
     public static County getByCode(final String code) throws CnpException {
         try {
-            if (!m_map.containsKey(Byte.parseByte(code))) {
+            if (!map.containsKey(Byte.parseByte(code))) {
                 throw new InvalidCountyException("Invalid county code");
             }
 
-            return m_map.get(Byte.parseByte(code));
+            return map.get(Byte.parseByte(code));
         } catch (Exception e) {
             throw new InvalidCountyException("Invalid county code");
         }

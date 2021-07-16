@@ -63,7 +63,7 @@ class CnpPartsImpl implements CnpParts, Serializable {
     public String cnp() { return m_cnp; }
 
     /**
-     * Vizualizálja a személy CNP-ből kikövetkeztett adatait.
+     * Vizualizálja a személy CNP-jét.
      *
      * @return formatált kimenet
      */

@@ -78,6 +78,10 @@ public class ClientView extends JFrame {
 		this.setContentPane(contentPanel);
 	}
 
+	/**
+	 * Megjeleníti a fájlkiválasztót, majd visszatéríti a kijelölt állományt.
+	 * @return kijelölt állomány vagy null, ha nem választott ki semmit
+	 */
 	private File showChooser() {
 		JFileChooser fileChooser = new JFileChooser();
 		int returnValue = fileChooser.showOpenDialog(null);
@@ -121,6 +125,13 @@ public class ClientView extends JFrame {
 		return cnpList;
 	}
 
+	/**
+	 * Egy felugró ablak formájában megjeleníti a Controller-től kapott kliens adatait.
+	 * @param client
+	 * 							megjelenítendő kliens
+	 * @param values
+	 * 							megjelenítendő klienshez tartozó tranzakcióértékek
+	 */
 	public void showClientData(CnpParts client, BigDecimal[] values) {
 		JDialog modalFrame = new JDialog(ClientView.this, "Information", true);
 		modalFrame.setLayout(new GridLayout(6, 1));
@@ -139,6 +150,10 @@ public class ClientView extends JFrame {
 		modalFrame.setVisible(true);
 	}
 
+	/**
+	 * Megjeleníti a feldolgozási eredményt a kapott JSONObject alapján.
+	 * @param object formázott és értelmezhető JSONObject
+	 */
 	public void showMetricesData(JSONObject object) {
 		JDialog modalFrame = new JDialog(ClientView.this, "Information", true);
 		modalFrame.setLayout(new GridLayout(6, 1));
