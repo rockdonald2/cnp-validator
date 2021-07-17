@@ -240,7 +240,7 @@ class PayMetricsProcessorImpl implements PayMetricsProcessor {
 			}
 
 			if (!mapOfCustomers.containsKey(cnp)) {
-				mapOfCustomers.put(cnp, new ArrayList<BigDecimal>());
+				mapOfCustomers.put(cnp, new ArrayList<>());
 			}
 
 			mapOfCustomers.get(cnp).add(paymentAmount);

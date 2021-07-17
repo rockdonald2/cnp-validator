@@ -14,12 +14,12 @@ class CnpValidatorImpl implements CnpValidator {
         ORDER_NUMBER(9, 12),
         CONTROL_CODE(12, 13);
 
-        private final int m_startIndex;
-        private final int m_endIndex;
+        private final int startIndex;
+        private final int endIndex;
 
         CnpPart(final int startIndex, final int endIndex) {
-            m_startIndex = startIndex;
-            m_endIndex = endIndex;
+            this.startIndex = startIndex;
+            this.endIndex = endIndex;
         }
 
         /**
@@ -31,7 +31,7 @@ class CnpValidatorImpl implements CnpValidator {
          *          componenta corespondenta
          */
         public String extractFrom(final String cnp) {
-            return cnp.substring(m_startIndex, m_endIndex);
+            return cnp.trim().substring(startIndex, endIndex);
         }
 
     }
