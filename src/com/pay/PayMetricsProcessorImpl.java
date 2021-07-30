@@ -18,7 +18,7 @@ import com.cnp.CnpParts;
 
 class PayMetricsProcessorImpl implements PayMetricsProcessor {
 
-	private final Set<PayError> m_errors = new HashSet<>();
+	private final Set<PayError> errors = new HashSet<>();
 
 	@Override
 	public Map<CnpParts, ArrayList<BigDecimal>> process(FileInputStream paymentsInputStream, FileOutputStream metricsOutputStream) throws IOException {
@@ -41,9 +41,9 @@ class PayMetricsProcessorImpl implements PayMetricsProcessor {
 			var foreigners = getForeigners(mapOfCustomers);
 
 			metrics = PayMetrics.getMetrics(foreigners, paymentsByMinors, bigPayments,
-							smallPayments, averagePaymentAmount, totalAmountCapitalCity, m_errors);
+							smallPayments, averagePaymentAmount, totalAmountCapitalCity, errors);
 		} else {
-			metrics = PayMetrics.getMetrics(0, 0, 0, 0, BigDecimal.ZERO, BigDecimal.ZERO, m_errors);
+			metrics = PayMetrics.getMetrics(0, 0, 0, 0, BigDecimal.ZERO, BigDecimal.ZERO, errors);
 		}
 
 		metrics.writeToFile(metricsOutputStream);
@@ -258,7 +258,7 @@ class PayMetricsProcessorImpl implements PayMetricsProcessor {
 	 *                      hibatípus
 	 */
 	private void writeError(final int lineNumber, final int errorType) {
-		m_errors.add(PayError.generateError(lineNumber, errorType));
+		errors.add(PayError.generateError(lineNumber, errorType));
 	}
 
 }

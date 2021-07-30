@@ -4,8 +4,8 @@ import org.json.JSONObject;
 
 class PayErrorImpl implements PayError {
 
-    private final int m_lineNumber;
-    private final int m_code;
+    private final int lineNumber;
+    private final int code;
 
     /**
      * Létrehoz egy PayError példányt, amely a hiba információt fogja tartalmazni, ami a feldolgozás során felmerült.
@@ -16,18 +16,18 @@ class PayErrorImpl implements PayError {
      *              hiba típusa
      */
     public PayErrorImpl(int lineNumber, int code) {
-        m_lineNumber = lineNumber;
-        m_code = code;
+        this.lineNumber = lineNumber;
+        this.code = code;
     }
 
     @Override
     public Integer line() {
-        return m_lineNumber;
+        return lineNumber;
     }
 
     @Override
     public Integer type() {
-        return m_code;
+        return code;
     }
 
     @Override

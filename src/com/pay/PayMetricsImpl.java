@@ -8,13 +8,13 @@ import java.util.Set;
 
 class PayMetricsImpl implements PayMetrics {
 
-    private final int m_foreigners;
-    private final int m_paymentsByMinors;
-    private final int m_bigPayments;
-    private final int m_smallPayments;
-    private final BigDecimal m_averagePaymentAmount;
-    private final BigDecimal m_totalAmountCapitalCity;
-    private final Set<PayError> m_errors;
+    private final int foreigners;
+    private final int paymentsByMinors;
+    private final int bigPayments;
+    private final int smallPayments;
+    private final BigDecimal averagePaymentAmount;
+    private final BigDecimal totalAmountCapitalCity;
+    private final Set<PayError> errors;
 
     /**
      * Létrehoz egy PayMetricsImpl példányt, amely JSON állományként szerializálható
@@ -37,48 +37,48 @@ class PayMetricsImpl implements PayMetrics {
     PayMetricsImpl(int foreigners, int paymentsByMinors, int bigPayments,
                    int smallPayments, BigDecimal averagePaymentAmount,
                    BigDecimal totalAmountCapitalCity, Set<PayError> errors) {
-        m_foreigners = foreigners;
-        m_paymentsByMinors = paymentsByMinors;
-        m_bigPayments = bigPayments;
-        m_smallPayments = smallPayments;
-        m_averagePaymentAmount = averagePaymentAmount;
-        m_totalAmountCapitalCity = totalAmountCapitalCity;
-        m_errors = errors;
+        this.foreigners = foreigners;
+        this.paymentsByMinors = paymentsByMinors;
+        this.bigPayments = bigPayments;
+        this.smallPayments = smallPayments;
+        this.averagePaymentAmount = averagePaymentAmount;
+        this.totalAmountCapitalCity = totalAmountCapitalCity;
+        this.errors = errors;
     }
 
     @Override
     public Integer foreigners() {
-        return m_foreigners;
+        return foreigners;
     }
 
     @Override
     public Integer paymentsByMinors() {
-        return m_paymentsByMinors;
+        return paymentsByMinors;
     }
 
     @Override
     public Integer bigPayments() {
-        return m_bigPayments;
+        return bigPayments;
     }
 
     @Override
     public Integer smallPayments() {
-        return m_smallPayments;
+        return smallPayments;
     }
 
     @Override
     public BigDecimal averagePaymentAmount() {
-        return m_averagePaymentAmount;
+        return averagePaymentAmount;
     }
 
     @Override
     public BigDecimal totalAmountCapitalCity() {
-        return m_totalAmountCapitalCity;
+        return totalAmountCapitalCity;
     }
 
     @Override
     public Set<PayError> errors() {
-        return m_errors;
+        return errors;
     }
 
     public void writeToFile(FileOutputStream file) {
