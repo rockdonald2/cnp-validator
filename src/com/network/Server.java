@@ -1,5 +1,7 @@
 package com.network;
 
+import com.utils.Logger;
+
 import java.io.IOException;
 import java.net.ServerSocket;
 
@@ -13,7 +15,7 @@ public class Server {
 				(new ClientHandle(ss.accept())).start();
 			}
 		} catch (IOException e) {
-			System.err.println("Error while creating ServerSocket");
+			Logger.getLogger().logMessage(Logger.LogLevel.ERROR, "Error while creating ServerSocket");
 		}
 	}
 

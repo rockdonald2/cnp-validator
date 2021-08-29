@@ -14,6 +14,7 @@ import com.pay.exception.NegativePaymentException;
 import com.pay.exception.PayException;
 import com.cnp.exception.CnpException;
 import com.cnp.CnpParts;
+import com.utils.Logger;
 
 
 class PayMetricsProcessorImpl implements PayMetricsProcessor {
@@ -218,7 +219,7 @@ class PayMetricsProcessorImpl implements PayMetricsProcessor {
 					throw new NegativePaymentException("Invalid payment with negative value");
 				}
 			} catch (PayException e) {
-				System.out.println(e.getMessage());
+				Logger.getLogger().logMessage(Logger.LogLevel.ERROR, e.getMessage());
 				writeError(i + 1, e.getCodeType());
 				continue;
 			}
@@ -233,7 +234,7 @@ class PayMetricsProcessorImpl implements PayMetricsProcessor {
 				try {
 					cnp = validator.validateCnp(currentPayment[0]);
 				} catch (CnpException e) {
-					System.out.println(e.getMessage());
+					Logger.getLogger().logMessage(Logger.LogLevel.ERROR, e.getMessage());
 					writeError(i + 1, e.getCodeType());
 					continue;
 				}

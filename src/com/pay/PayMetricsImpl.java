@@ -1,5 +1,6 @@
 package com.pay;
 
+import com.utils.Logger;
 import org.json.*;
 
 import java.io.*;
@@ -103,7 +104,7 @@ class PayMetricsImpl implements PayMetrics {
            o.flush();
            o.close();
         } catch (IOException e) {
-            e.printStackTrace();
+            Logger.getLogger().logMessage(Logger.LogLevel.ERROR, e.getMessage());
         }
     }
 

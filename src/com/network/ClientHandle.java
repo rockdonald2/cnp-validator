@@ -3,6 +3,7 @@ package com.network;
 import com.cnp.CnpParts;
 import com.gui.ClientView;
 import com.pay.PayMetricsProcessor;
+import com.utils.Logger;
 
 import java.io.*;
 import java.math.BigDecimal;
@@ -29,6 +30,7 @@ public class ClientHandle extends Thread {
 			in = new BufferedReader(new InputStreamReader(client.getInputStream()));
 		} catch (IOException e) {
 			ClientView.showErrorMessage("Server error: error while creating in/out streams");
+			Logger.getLogger().logMessage(Logger.LogLevel.ERROR, "Server error: error while creating in/out streams");
 
 			return;
 		}
@@ -38,6 +40,7 @@ public class ClientHandle extends Thread {
 			paymentsInputStream = new FileInputStream(in.readLine());
 		} catch (IOException e) {
 			ClientView.showErrorMessage("Server error: error while finding input tranzactions");
+			Logger.getLogger().logMessage(Logger.LogLevel.ERROR, "Server error: error while finding input tranzactions");
 
 			return;
 		}
@@ -47,6 +50,7 @@ public class ClientHandle extends Thread {
 			paymentsOutputStream = new FileOutputStream(in.readLine());
 		} catch (IOException e) {
 			ClientView.showErrorMessage("Server error: error while finding output file");
+			Logger.getLogger().logMessage(Logger.LogLevel.ERROR, "Server error: error while finding output file");
 
 			return;
 		}
@@ -56,6 +60,7 @@ public class ClientHandle extends Thread {
 			mapOfCustomers = PayMetricsProcessor.getProcessor().process(paymentsInputStream, paymentsOutputStream);
 		} catch (IOException e) {
 			ClientView.showErrorMessage("Server error: error while processing payments");
+			Logger.getLogger().logMessage(Logger.LogLevel.ERROR, "Server error: error while processing payments");
 
 			return;
 		}
@@ -67,6 +72,7 @@ public class ClientHandle extends Thread {
 			outClient.flush();
 		} catch (IOException e) {
 			ClientView.showErrorMessage("Server error: error while serializing map of customers");
+			Logger.getLogger().logMessage(Logger.LogLevel.ERROR, "Server error: error while serializing map of customers");
 		}
 
 		try {
@@ -75,6 +81,7 @@ public class ClientHandle extends Thread {
 			client.close();
 		} catch (IOException e) {
 			ClientView.showErrorMessage("Server error: error while closing socket");
+			Logger.getLogger().logMessage(Logger.LogLevel.ERROR, "Server error: error while closing socket");
 		}
 	}
 

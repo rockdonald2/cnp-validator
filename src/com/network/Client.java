@@ -3,6 +3,7 @@ package com.network;
 import com.cnp.CnpParts;
 import com.gui.ClientController;
 import com.gui.ClientView;
+import com.utils.Logger;
 
 import java.io.*;
 import java.math.BigDecimal;
@@ -44,6 +45,7 @@ public class Client {
 	public void requestProcess() {
 		if (this.inputPath == null || this.outputPath == null) {
 			ClientView.showErrorMessage("Client error: input or output paths are not set");
+			Logger.getLogger().logMessage(Logger.LogLevel.ERROR, "Client error: input or output paths are not set");
 
 			return;
 		}
@@ -53,6 +55,7 @@ public class Client {
 			s = new Socket("localhost", 11111);
 		} catch (IOException e) {
 			ClientView.showErrorMessage("Client error: error while creating socket");
+			Logger.getLogger().logMessage(Logger.LogLevel.ERROR, "Client error: error while creating socket");
 
 			return;
 		}
@@ -62,6 +65,7 @@ public class Client {
 			out = new PrintWriter(new OutputStreamWriter(s.getOutputStream()));
 		} catch (IOException e) {
 			ClientView.showErrorMessage("Client error: error while creating in/out streams");
+			Logger.getLogger().logMessage(Logger.LogLevel.ERROR, "Client error: error while creating in/out streams");
 
 			return;
 		}
@@ -76,10 +80,12 @@ public class Client {
 			Map<CnpParts, ArrayList<BigDecimal>> mapOfCustomers = (Map<CnpParts, ArrayList<BigDecimal>>) inClient.readObject();
 
 			ClientView.showInformationMessage("Payments successfully processed");
+			Logger.getLogger().logMessage(Logger.LogLevel.INFO, "Payments successfully processed");
 
 			controller.receiveMapOfCustomers(mapOfCustomers);
 		} catch (IOException | ClassNotFoundException e) {
 			ClientView.showErrorMessage("Client error: error while recreating map of customers");
+			Logger.getLogger().logMessage(Logger.LogLevel.ERROR, "Client error: error while recreating map of customers");
 
 			controller.setRequestProcessActive(false);
 			controller.setShowMetricesActive(false);
@@ -92,6 +98,7 @@ public class Client {
 			s.close();
 		} catch (IOException e) {
 			ClientView.showErrorMessage("Client error: error while reading server answer");
+			Logger.getLogger().logMessage(Logger.LogLevel.ERROR, "Client error: error while reading server answer");
 		}
 	}
 
