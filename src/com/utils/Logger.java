@@ -6,6 +6,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.regex.Pattern;
 
 public class Logger {
 
@@ -33,8 +34,7 @@ public class Logger {
 		long currPID = ProcessHandle.current().pid();
 
 		String formattedLogFileName = "log-" + currDateFormated + "-" + currPID + ".log";
-		String systemSeparator = System.getProperty("file.separator");
-		String fullPath = "D:" + systemSeparator + "Temp" + systemSeparator;
+		String fullPath = gettingSurelyExistingDrive() + File.separator + "Temp" + File.separator;
 		try {
 			File logFilePath = new File(fullPath);
 			logFilePath.mkdirs();
@@ -55,7 +55,7 @@ public class Logger {
 		return instance;
 	}
 
-	public void logMessage(LogLevel level, String msg) {
+	public synchronized void logMessage(LogLevel level, String msg) {
 		if (this.logBW == null) {
 			System.err.println("Error: Unable to connect to the log file.");
 			return;
@@ -71,6 +71,12 @@ public class Logger {
 		} catch (IOException e) {
 			System.err.println(e);
 		}
+	}
+
+	private static String gettingSurelyExistingDrive() {
+		String winPath = System.getenv("windir");
+
+		return (winPath.split(Pattern.quote("\\")))[0];
 	}
 
 }
