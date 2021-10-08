@@ -1,9 +1,6 @@
 package com.utils;
 
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
+import java.io.*;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.regex.Pattern;
@@ -47,7 +44,7 @@ public class Logger {
 		}
 	}
 
-	public static Logger getLogger() {
+	public static synchronized Logger getLogger() {
 		if (instance == null) {
 			instance = new Logger();
 		}
@@ -77,6 +74,19 @@ public class Logger {
 		String winPath = System.getenv("windir");
 
 		return (winPath.split(Pattern.quote("\\")))[0];
+	}
+
+	@Override
+	protected Object clone() throws CloneNotSupportedException {
+		throw new CloneNotSupportedException();
+	}
+
+	private void writeObject(ObjectOutputStream out) throws NotSerializableException {
+		throw new NotSerializableException();
+	}
+
+	private void readObject(ObjectInputStream in) throws NotSerializableException {
+		throw new NotSerializableException();
 	}
 
 }
