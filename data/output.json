@@ -1,1 +1,1 @@
-{"paymentsByMinor":3,"smallPayments":12,"foreigners":2,"bigPayments":21,"errors":[{"line":46,"type":1},{"line":45,"type":1},{"line":47,"type":1},{"line":20,"type":1},{"line":17,"type":1},{"line":16,"type":1},{"line":13,"type":1},{"line":48,"type":1},{"line":23,"type":1},{"line":1,"type":0}],"averagePaymentAmount":37763.21,"totalAmountCapitalCity":338841.78}
+{"paymentsByMinor":2,"smallPayments":5,"foreigners":0,"bigPayments":1,"errors":[],"averagePaymentAmount":1339.72,"totalAmountCapitalCity":199.68}
