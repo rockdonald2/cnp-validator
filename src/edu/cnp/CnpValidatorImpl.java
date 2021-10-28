@@ -1,6 +1,5 @@
 package edu.cnp;
 
-import com.cnp.exception.*;
 import edu.cnp.exception.*;
 import org.apache.commons.validator.GenericValidator;
 import org.apache.commons.lang3.StringUtils;

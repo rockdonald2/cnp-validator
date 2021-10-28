@@ -1,6 +1,5 @@
 package edu.cnp;
 
-import com.cnp.exception.*;
 import edu.cnp.exception.*;
 import org.junit.Assert;
 import org.junit.Test;
