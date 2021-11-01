@@ -23,12 +23,12 @@ class CnpValidatorImpl implements CnpValidator {
         }
 
         /**
-         * Extrage componente din CNP.
+         * Kiszedi a CNP komponenseit
          *
          * @param cnp
-         *              CNP-ul de validat
+         *              Ellenőrízendő CNP
          * @return
-         *          componenta corespondenta
+         *          megfelelő komponens
          */
         public String extractFrom(final String cnp) {
             return cnp.trim().substring(startIndex, endIndex);

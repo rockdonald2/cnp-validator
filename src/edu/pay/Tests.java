@@ -33,7 +33,7 @@ class Tests {
     *       2930621262681;5257.21
     *       1420323428810;199.68
     * */
-    private static final Map<CnpParts, ArrayList<BigDecimal>> test_list_correct_data = loadTestList("D:\\CodeSpring\\data\\testCorrectData.csv");
+    private static final Map<CnpParts, ArrayList<BigDecimal>> test_list_correct_data = loadTestList("D:\\GitHub\\CodeSpring\\data\\testCorrectData.csv");
 
     private static Map<CnpParts, ArrayList<BigDecimal>> loadTestList(final String path) {
         final var list = new HashMap<CnpParts, ArrayList<BigDecimal>>();

@@ -155,17 +155,17 @@ class Tests {
 
         @Test
         public void caseThatThrows1() {
-            Assert.assertThrows(InvalidCenturyException.class, () -> test_validator.getForeignStatus("n"));
+            Assert.assertThrows(InvalidSexException.class, () -> test_validator.getForeignStatus("n"));
         }
 
         @Test
         public void caseThatThrows2() {
-            Assert.assertThrows(InvalidCenturyException.class, () -> test_validator.getForeignStatus("."));
+            Assert.assertThrows(InvalidSexException.class, () -> test_validator.getForeignStatus("."));
         }
 
         @Test
         public void caseThatThrows3() {
-            Assert.assertThrows(InvalidCenturyException.class, () -> test_validator.getForeignStatus("0"));
+            Assert.assertThrows(InvalidSexException.class, () -> test_validator.getForeignStatus("0"));
         }
 
     }
